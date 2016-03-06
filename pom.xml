@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.mycontroller</groupId>
+    <artifactId>mycontroller-parent</artifactId>
+    <version>1</version>
+  </parent>
+
+  <artifactId>mycontroller-rest-clients</artifactId>
+  <version>0.0.3.Alpha2-SNAPSHOT</version>
+
+  <inceptionYear>2016</inceptionYear>
+
+  <scm>
+    <url>https://github.com/mycontroller-org/mycontroller-rest-clients</url>
+    <connection>scm:git:https://github.com/mycontroller-org/mycontroller-rest-clients</connection>
+    <developerConnection>scm:git:git@github.com:mycontroller-org/mycontroller-rest-clients.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+</project>
