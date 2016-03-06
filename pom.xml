@@ -38,4 +38,106 @@
     <tag>HEAD</tag>
   </scm>
 
+  <properties>
+    <!-- dependency versions -->
+    <version.org.slf4j>1.7.12</version.org.slf4j>
+    <version.ch.qos.logback>1.1.3</version.ch.qos.logback>
+    <version.org.jboss.resteasy>3.0.14.Final</version.org.jboss.resteasy>
+    <version.org.apache.commons>1.4</version.org.apache.commons>
+    <version.commons-codec>1.10</version.commons-codec>
+    <version.org.projectlombok>1.16.6</version.org.projectlombok>
+    <version.apache.httpclient>4.5.1</version.apache.httpclient>
+    <version.apache.httpcore>4.4.4</version.apache.httpcore>
+    <version.commons-io>2.4</version.commons-io>
+  </properties>
+
+  <dependencies>
+
+    <!-- Logger -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${version.org.slf4j}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>${version.ch.qos.logback}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${version.ch.qos.logback}</version>
+    </dependency>
+
+    <!-- RestEasy -->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>tjws</artifactId>
+      <version>${version.org.jboss.resteasy}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jackson2-provider</artifactId>
+      <version>${version.org.jboss.resteasy}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-client</artifactId>
+      <version>${version.org.jboss.resteasy}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jaxrs</artifactId>
+      <version>${version.org.jboss.resteasy}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-io</groupId>
+          <artifactId>commons-io</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- commons-io version -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${version.commons-io}</version>
+    </dependency>
+
+    <!-- Apache - Commons Lang -->
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>${version.commons-lang}</version>
+    </dependency>
+
+    <!-- Project lombok builder annotation -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${version.org.projectlombok}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Apache HttpComponents -->
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>${version.apache.httpclient}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
+      <version>${version.apache.httpcore}</version>
+    </dependency>
+
+  </dependencies>
+
 </project>
