@@ -47,9 +47,11 @@ public class InfluxdbClientImpl extends ClientBase<InfluxdbRestAPI> implements I
     public ClientResponse<String> write(String key, String tags, Long timestamp, String value) {
         //timestamp format: 1434067467000000000
         dataBuilder.setLength(0);
-        dataBuilder
-                .append(key).append(",").append(tags.replaceAll(" ", "_"))
-                .append(" value=").append(value).append(" ").append(timestamp).append("000000");
+        dataBuilder.append(key);
+        if (tags != null && tags.length() > 0) {
+            dataBuilder.append(",").append(tags.replaceAll(" ", "_"));
+        }
+        dataBuilder.append(" value=").append(value).append(" ").append(timestamp).append("000000");
         return new ClientResponse<String>(restApi().write(database, dataBuilder.toString()), 204);
     }
 }
