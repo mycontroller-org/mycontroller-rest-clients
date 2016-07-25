@@ -99,7 +99,7 @@ public class RestFactory<T> {
         }
     }
 
-    public T createAPI(URI uri, String userName, String password, TRUST_HOST_TYPE trustHostType) {
+    public T createAPI(URI uri, String username, String password, TRUST_HOST_TYPE trustHostType) {
         HttpClient httpclient = null;
         _logger.debug("URI:{}, TrustType:{}", uri.toString(), trustHostType.getText());
         if (uri.toString().startsWith("https") && trustHostType == TRUST_HOST_TYPE.ANY) {
@@ -107,14 +107,13 @@ public class RestFactory<T> {
         } else {
             httpclient = HttpClientBuilder.create().build();
         }
-        ResteasyClient client = null;
         ApacheHttpClient4Engine engine = null;
-        if (userName != null) {
+        if (username != null && username.length() > 0) {
             HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort());
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
             credsProvider.setCredentials(
                     new AuthScope(targetHost.getHostName(), targetHost.getPort()),
-                    new UsernamePasswordCredentials(userName, password));
+                    new UsernamePasswordCredentials(username, password));
             // Create AuthCache instance
             AuthCache authCache = new BasicAuthCache();
             // Generate BASIC scheme object and add it to the local auth cache
@@ -128,8 +127,7 @@ public class RestFactory<T> {
         } else {
             engine = new ApacheHttpClient4Engine(httpclient);
         }
-        client = new ResteasyClientBuilder().httpEngine(engine).build();
-
+        ResteasyClient client = new ResteasyClientBuilder().httpEngine(engine).build();
         client.register(JacksonJaxbJsonProvider.class);
         client.register(JacksonObjectMapperProvider.class);
         client.register(new RestRequestFilter(headers));
@@ -155,7 +153,7 @@ public class RestFactory<T> {
                 }
             });
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build(),
-                    new McRestHostnameVerifier());
+                    new McRestAnyHostnameVerifier());
             CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(
                     sslsf).build();
             return httpclient;
@@ -170,7 +168,7 @@ public class RestFactory<T> {
     }
 
     //Trust all hostname
-    class McRestHostnameVerifier implements HostnameVerifier {
+    class McRestAnyHostnameVerifier implements HostnameVerifier {
         @Override
         public boolean verify(String hostname, SSLSession session) {
             return true;
