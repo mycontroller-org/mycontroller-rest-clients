@@ -33,7 +33,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 0.0.3
+ * @since 1.0.0
  */
 public class PhantIOClientImpl extends ClientBase<PhantIORestAPI> implements PhantIOClient {
     public static final String DEFAULT_PHANTIO_URL = "https://data.sparkfun.com";

@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 0.0.3
+ * @since 1.0.0
  */
 @Provider
 public class ResponseLogger implements ClientResponseFilter {

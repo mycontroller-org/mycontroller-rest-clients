@@ -25,7 +25,7 @@ import org.mycontroller.standalone.restclient.RestFactory.TRUST_HOST_TYPE;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 0.0.3
+ * @since 1.0.0
  */
 public class InfluxdbClientImpl extends ClientBase<InfluxdbRestAPI> implements InfluxdbClient {
     private String database;

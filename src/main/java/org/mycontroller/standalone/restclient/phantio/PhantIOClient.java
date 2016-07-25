@@ -26,7 +26,7 @@ import org.mycontroller.standalone.restclient.phantio.model.Stats;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 0.0.3
+ * @since 1.0.0
  */
 public interface PhantIOClient extends IRestClient {
     ClientResponse<String> clear();

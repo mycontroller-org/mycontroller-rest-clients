@@ -26,7 +26,7 @@ import javax.ws.rs.core.Response;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 0.0.3
+ * @since 1.0.0
  */
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)

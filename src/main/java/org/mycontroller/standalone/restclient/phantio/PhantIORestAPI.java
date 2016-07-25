@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 0.0.3
+ * @since 1.0.0
  */
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
