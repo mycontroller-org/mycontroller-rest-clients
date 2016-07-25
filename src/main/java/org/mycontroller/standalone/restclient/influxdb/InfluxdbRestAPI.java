@@ -35,6 +35,10 @@ public interface InfluxdbRestAPI {
 
     @POST
     @Path("write")
-    Response write(@QueryParam("db") String database, String data);
+    Response write(
+            @QueryParam("db") String database,
+            @QueryParam("u") String username,
+            @QueryParam("p") String password,
+            String data);
 
 }

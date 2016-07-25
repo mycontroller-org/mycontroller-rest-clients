@@ -21,6 +21,7 @@ import java.net.URI;
 import org.mycontroller.standalone.restclient.ClientBase;
 import org.mycontroller.standalone.restclient.ClientResponse;
 import org.mycontroller.standalone.restclient.RestFactory;
+import org.mycontroller.standalone.restclient.RestFactory.TRUST_HOST_TYPE;
 import org.mycontroller.standalone.restclient.plivo.model.Message;
 import org.mycontroller.standalone.restclient.plivo.model.MessageResponse;
 
@@ -36,7 +37,7 @@ public class PlivoClientImpl extends ClientBase<PlivoRestAPI> implements PlivoCl
         super(new URI(String.format("%s/%s/Account/%s", PLIVO_URL, PLIVO_VERSION, authId)),
                 authId,
                 authToken,
-                new RestFactory<PlivoRestAPI>(PlivoRestAPI.class));
+                new RestFactory<PlivoRestAPI>(PlivoRestAPI.class), TRUST_HOST_TYPE.DEFAULT);
     }
 
     @Override

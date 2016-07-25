@@ -29,18 +29,21 @@ import org.mycontroller.standalone.restclient.RestFactory.TRUST_HOST_TYPE;
  */
 public class InfluxdbClientImpl extends ClientBase<InfluxdbRestAPI> implements InfluxdbClient {
     private String database;
+    private String username;
+    private String password;
     private StringBuilder dataBuilder = new StringBuilder();
 
     public InfluxdbClientImpl(String url, String database, TRUST_HOST_TYPE trustHostType)
             throws Exception {
-        super(new URI(url), new RestFactory<InfluxdbRestAPI>(InfluxdbRestAPI.class));
+        super(new URI(url), new RestFactory<InfluxdbRestAPI>(InfluxdbRestAPI.class), trustHostType);
         this.database = database;
     }
 
     public InfluxdbClientImpl(String url, String username, String password, String database,
             TRUST_HOST_TYPE trustHostType) throws Exception {
-        super(new URI(url), username, password, new RestFactory<InfluxdbRestAPI>(InfluxdbRestAPI.class));
-        this.database = database;
+        this(url, database, trustHostType);
+        this.username = username;
+        this.password = password;
     }
 
     @Override
@@ -52,6 +55,6 @@ public class InfluxdbClientImpl extends ClientBase<InfluxdbRestAPI> implements I
             dataBuilder.append(",").append(tags.replaceAll(" ", "_"));
         }
         dataBuilder.append(" value=").append(value).append(" ").append(timestamp).append("000000");
-        return new ClientResponse<String>(restApi().write(database, dataBuilder.toString()), 204);
+        return new ClientResponse<String>(restApi().write(database, username, password, dataBuilder.toString()), 204);
     }
 }

@@ -21,6 +21,7 @@ import java.net.URI;
 import org.mycontroller.standalone.restclient.ClientBase;
 import org.mycontroller.standalone.restclient.ClientResponse;
 import org.mycontroller.standalone.restclient.RestFactory;
+import org.mycontroller.standalone.restclient.RestFactory.TRUST_HOST_TYPE;
 import org.mycontroller.standalone.restclient.pushbullet.model.Devices;
 import org.mycontroller.standalone.restclient.pushbullet.model.Push;
 import org.mycontroller.standalone.restclient.pushbullet.model.PushResponse;
@@ -38,7 +39,7 @@ public class PushbulletClientImpl extends ClientBase<PushbulletRestAPI> implemen
         super(new URI(String.format("%s/%s", PUSHBULLET_URL, PUSHBULLET_VERSION)),
                 authId,
                 authToken,
-                new RestFactory<PushbulletRestAPI>(PushbulletRestAPI.class));
+                new RestFactory<PushbulletRestAPI>(PushbulletRestAPI.class), TRUST_HOST_TYPE.DEFAULT);
     }
 
     @Override

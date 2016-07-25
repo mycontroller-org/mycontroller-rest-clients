@@ -34,7 +34,7 @@ public class EmoncmsClientImpl extends ClientBase<EmoncmsRestAPI> implements Emo
 
     public EmoncmsClientImpl(String url, String writeApiKey, TRUST_HOST_TYPE trustHostType)
             throws Exception {
-        super(new URI(url), new RestFactory<EmoncmsRestAPI>(EmoncmsRestAPI.class));
+        super(new URI(url), new RestFactory<EmoncmsRestAPI>(EmoncmsRestAPI.class), trustHostType);
         this.writeApiKey = writeApiKey;
     }
 

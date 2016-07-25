@@ -22,6 +22,9 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -98,12 +101,14 @@ public class RestFactory<T> {
 
     public T createAPI(URI uri, String userName, String password, TRUST_HOST_TYPE trustHostType) {
         HttpClient httpclient = null;
+        _logger.debug("URI:{}, TrustType:{}", uri.toString(), trustHostType.getText());
         if (uri.toString().startsWith("https") && trustHostType == TRUST_HOST_TYPE.ANY) {
             httpclient = getHttpClient();
         } else {
             httpclient = HttpClientBuilder.create().build();
         }
         ResteasyClient client = null;
+        ApacheHttpClient4Engine engine = null;
         if (userName != null) {
             HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort());
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
@@ -119,13 +124,11 @@ public class RestFactory<T> {
             HttpClientContext context = HttpClientContext.create();
             context.setCredentialsProvider(credsProvider);
             context.setAuthCache(authCache);
-            ApacheHttpClient4Engine engine = new ApacheHttpClient4Engine(httpclient, context);
-
-            client = new ResteasyClientBuilder().httpEngine(engine).build();
+            engine = new ApacheHttpClient4Engine(httpclient, context);
         } else {
-            ApacheHttpClient4Engine engine = new ApacheHttpClient4Engine(getHttpClient());
-            client = new ResteasyClientBuilder().httpEngine(engine).build();
+            engine = new ApacheHttpClient4Engine(httpclient);
         }
+        client = new ResteasyClientBuilder().httpEngine(engine).build();
 
         client.register(JacksonJaxbJsonProvider.class);
         client.register(JacksonObjectMapperProvider.class);
@@ -151,11 +154,11 @@ public class RestFactory<T> {
                     return true;
                 }
             });
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build(),
+                    new McRestHostnameVerifier());
             CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(
                     sslsf).build();
             return httpclient;
-
         } catch (Exception ex) {
             _logger.error("Exception, ", ex);
             return null;
@@ -164,5 +167,14 @@ public class RestFactory<T> {
 
     public void setHeaders(HashMap<String, Object> headers) {
         this.headers = headers;
+    }
+
+    //Trust all hostname
+    class McRestHostnameVerifier implements HostnameVerifier {
+        @Override
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
+
     }
 }

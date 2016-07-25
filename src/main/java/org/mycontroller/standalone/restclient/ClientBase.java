@@ -42,16 +42,17 @@ public class ClientBase<T> {
     }
 
     public ClientBase(URI targetUri, String username, String password,
-            RestFactory<T> restFactory) throws Exception {
-        this(targetUri, username, password, TRUST_HOST_TYPE.DEFAULT, restFactory, null);
+            RestFactory<T> restFactory, TRUST_HOST_TYPE trustHostType) throws Exception {
+        this(targetUri, username, password, trustHostType, restFactory, null);
     }
 
-    public ClientBase(URI targetUri, RestFactory<T> restFactory) throws Exception {
-        this(targetUri, null, null, TRUST_HOST_TYPE.DEFAULT, restFactory, null);
+    public ClientBase(URI targetUri, RestFactory<T> restFactory, TRUST_HOST_TYPE trustHostType) throws Exception {
+        this(targetUri, null, null, trustHostType, restFactory, null);
     }
 
-    public ClientBase(URI targetUri, RestFactory<T> restFactory, HashMap<String, Object> headers) throws Exception {
-        this(targetUri, null, null, TRUST_HOST_TYPE.DEFAULT, restFactory, headers);
+    public ClientBase(URI targetUri, RestFactory<T> restFactory, TRUST_HOST_TYPE trustHostType,
+            HashMap<String, Object> headers) throws Exception {
+        this(targetUri, null, null, trustHostType, restFactory, headers);
     }
 
     public T restApi() {

@@ -21,6 +21,7 @@ import java.net.URI;
 import org.mycontroller.standalone.restclient.ClientBase;
 import org.mycontroller.standalone.restclient.ClientResponse;
 import org.mycontroller.standalone.restclient.RestFactory;
+import org.mycontroller.standalone.restclient.RestFactory.TRUST_HOST_TYPE;
 import org.mycontroller.standalone.restclient.twilio.model.Message;
 import org.mycontroller.standalone.restclient.twilio.model.MessageResponse;
 
@@ -30,11 +31,12 @@ import org.mycontroller.standalone.restclient.twilio.model.MessageResponse;
  */
 public class TwilioClientImpl extends ClientBase<TwilioRestAPI> implements TwilioClient {
     public static final String TWILIO_URL = "https://api.twilio.com/2010-04-01";
+
     public TwilioClientImpl(String authSid, String authToken) throws Exception {
         super(new URI(String.format("%s/Accounts/%s", TWILIO_URL, authSid)),
                 authSid,
                 authToken,
-                new RestFactory<TwilioRestAPI>(TwilioRestAPI.class));
+                new RestFactory<TwilioRestAPI>(TwilioRestAPI.class), TRUST_HOST_TYPE.DEFAULT);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class PhantIOClientImpl extends ClientBase<PhantIORestAPI> implements Pha
 
     public PhantIOClientImpl(String url, String publicKey, String privateKey, TRUST_HOST_TYPE trustHostType)
             throws Exception {
-        super(new URI(url), new RestFactory<PhantIORestAPI>(PhantIORestAPI.class));
+        super(new URI(url), new RestFactory<PhantIORestAPI>(PhantIORestAPI.class), trustHostType);
         this.publicKey = publicKey;
         this.privateKey = privateKey;
         updateHeader("Phant-Private-Key", privateKey);
