@@ -18,29 +18,34 @@ package org.mycontroller.standalone.restclient;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 import javax.ws.rs.core.Response;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Data;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
  * @since 0.0.3
  */
 @Data
+@ToString
+@Slf4j
 public class ClientResponse<T> {
-    private static final Logger _logger = LoggerFactory.getLogger(ClientResponse.class);
     private int statusCode;
     private String errorMsg;
     private T entity;
     private boolean success = false;
+
+    public ClientResponse(Class<?> clazz, Response response, int statusCode, boolean isEntityList) {
+        this(clazz, response, statusCode, isEntityList == true ? List.class : null);
+    }
 
     public ClientResponse(Class<?> clazz, Response response, int statusCode) {
         this(clazz, response, statusCode, null);
@@ -66,17 +71,17 @@ public class ClientResponse<T> {
                 } else if (clazz != null) {
                     this.setEntity((T) objectMapper.readValue(response.readEntity(String.class), clazz));
                 } else {
-                    this.setEntity((T) response.readEntity(clazz));
+                    this.setEntity((T) response.readEntity(String.class));
                 }
             } else {
                 this.setErrorMsg(response.readEntity(String.class));
             }
-        } catch (JsonParseException e) {
-            _logger.error("Error, ", e);
-        } catch (JsonMappingException e) {
-            _logger.error("Error, ", e);
-        } catch (IOException e) {
-            _logger.error("Error, ", e);
+        } catch (JsonParseException ex) {
+            _logger.error("Error, ", ex);
+        } catch (JsonMappingException ex) {
+            _logger.error("Error, ", ex);
+        } catch (IOException ex) {
+            _logger.error("Error, ", ex);
         } finally {
             response.close();
         }

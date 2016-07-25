@@ -17,6 +17,9 @@
 package org.mycontroller.standalone.restclient;
 
 import java.net.URI;
+import java.util.HashMap;
+
+import org.mycontroller.standalone.restclient.RestFactory.TRUST_HOST_TYPE;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
@@ -24,13 +27,46 @@ import java.net.URI;
  */
 public class ClientBase<T> {
     private T restApi;
+    private URI targetUri;
+    private HashMap<String, Object> headers = null;
+
+    public ClientBase(URI targetUri, String username, String password, TRUST_HOST_TYPE trustHostType,
+            RestFactory<T> restFactory, HashMap<String, Object> headers) throws Exception {
+        if (headers == null) {
+            headers = new HashMap<String, Object>();
+        }
+        this.headers = headers;
+        this.targetUri = targetUri;
+        restFactory.setHeaders(this.headers);
+        restApi = (T) restFactory.createAPI(targetUri, username, password, trustHostType);
+    }
 
     public ClientBase(URI targetUri, String username, String password,
             RestFactory<T> restFactory) throws Exception {
-        restApi = (T) restFactory.createAPI(targetUri, username, password);
+        this(targetUri, username, password, TRUST_HOST_TYPE.DEFAULT, restFactory, null);
+    }
+
+    public ClientBase(URI targetUri, RestFactory<T> restFactory) throws Exception {
+        this(targetUri, null, null, TRUST_HOST_TYPE.DEFAULT, restFactory, null);
+    }
+
+    public ClientBase(URI targetUri, RestFactory<T> restFactory, HashMap<String, Object> headers) throws Exception {
+        this(targetUri, null, null, TRUST_HOST_TYPE.DEFAULT, restFactory, headers);
     }
 
     public T restApi() {
         return this.restApi;
+    }
+
+    public void updateHeader(String key, Object value) {
+        headers.put(key, value);
+    }
+
+    public void removeHeader(String key) {
+        headers.remove(key);
+    }
+
+    public URI getTargetUri() {
+        return targetUri;
     }
 }
