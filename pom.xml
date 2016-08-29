@@ -24,11 +24,11 @@
   <parent>
     <groupId>org.mycontroller</groupId>
     <artifactId>mycontroller-parent</artifactId>
-    <version>7</version>
+    <version>13</version>
   </parent>
 
   <artifactId>mycontroller-rest-clients</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <url>https://github.com/mycontroller-org</url>
   <inceptionYear>2015</inceptionYear>
 

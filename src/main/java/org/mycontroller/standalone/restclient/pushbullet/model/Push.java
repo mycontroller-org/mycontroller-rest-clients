@@ -52,4 +52,11 @@ public class Push {
     private String body;
     private String url;
 
+    public void clearTargets() {
+        deviceIden = null;
+        email = null;
+        channelTag = null;
+        clientIden = null;
+    }
+
 }
