@@ -16,6 +16,8 @@
  */
 package org.mycontroller.restclient.philips.hue.model;
 
+import lombok.Builder;
+
 import lombok.Data;
 import lombok.ToString;
 
@@ -26,6 +28,7 @@ import lombok.ToString;
 
 @Data
 @ToString
+@Builder
 public class State {
     private Integer hue;
     private Boolean on;
