@@ -27,11 +27,13 @@ import lombok.ToString;
 @Data
 @ToString
 public class LightState {
-    private String id;
     private State state;
-    private Pointsymbol pointsymbol;
     private String type;
     private String name;
     private String modelid;
+    private String uniqueid;
+    private String manufacturername;
+    private String luminaireuniqueid;
     private String swversion;
+    private Pointsymbol pointsymbol;
 }

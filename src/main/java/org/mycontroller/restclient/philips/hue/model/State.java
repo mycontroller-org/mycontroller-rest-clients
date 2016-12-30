@@ -16,9 +16,10 @@
  */
 package org.mycontroller.restclient.philips.hue.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -29,15 +30,17 @@ import lombok.ToString;
 @Data
 @ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class State {
-    private Integer hue;
     private Boolean on;
-    private String effects;
-    private String alert;
     private Integer bri;
+    private Integer hue;
     private Integer sat;
-    private Integer ct;
     private Float[] xy;
-    private Boolean reachable;
+    private Integer ct;
+    private String alert;
+    private String effects;
     private String colormode;
+    private Boolean reachable;
 }
