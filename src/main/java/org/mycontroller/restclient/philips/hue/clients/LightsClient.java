@@ -32,7 +32,7 @@ public interface LightsClient {
 
     ClientResponse<Map<String, LightState>> listAll();
 
-    ClientResponse<Map<String, String>> listNew();
+    ClientResponse<Map<String, Object>> listNew();
 
     ClientResponse<String> searchNew();
 

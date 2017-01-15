@@ -55,4 +55,13 @@ public class CollectionJavaTypeResolver {
 
         return objectMapper.getTypeFactory().constructCollectionType(collectionClazz, clazzType);
     }
+
+    /**
+     * List with Generic Map, Generic, i.e.: List<Map<String, Object>>
+     */
+    public JavaType get(@SuppressWarnings("rawtypes") Class<? extends List> collectionClazz, Class<?> mapClazz,
+            Class<?> keyClazz, Class<?> valueClazz) {
+        JavaType clazzType = objectMapper.getTypeFactory().constructMapLikeType(mapClazz, keyClazz, valueClazz);
+        return objectMapper.getTypeFactory().constructCollectionType(collectionClazz, clazzType);
+    }
 }

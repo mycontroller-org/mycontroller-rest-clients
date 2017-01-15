@@ -62,11 +62,11 @@ public class DefaultLightsClient extends BaseClient<LightsHandler> implements Li
     }
 
     @Override
-    public ClientResponse<Map<String, String>> listNew() {
+    public ClientResponse<Map<String, Object>> listNew() {
         Response serverResponse = null;
         try {
             serverResponse = restApi().getNew(authorizedUser);
-            JavaType javaType = mapResolver().get(Map.class, String.class, String.class);
+            JavaType javaType = mapResolver().get(Map.class, String.class, Object.class);
             return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
