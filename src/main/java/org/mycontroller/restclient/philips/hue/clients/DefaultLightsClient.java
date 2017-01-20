@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Jeeva Kandasamy (jkandasa@gmail.com)
+ * Copyright 2015-2017 Jeeva Kandasamy (jkandasa@gmail.com)
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -104,11 +104,11 @@ public class DefaultLightsClient extends BaseClient<LightsHandler> implements Li
     }
 
     @Override
-    public ClientResponse<String> updateName(String id, String name) {
+    public ClientResponse<Empty> updateName(String id, String name) {
         Response serverResponse = null;
         try {
             serverResponse = restApi().updateName(authorizedUser, id, name);
-            JavaType javaType = simpleResolver().get(String.class);
+            JavaType javaType = simpleResolver().get(Empty.class);
             return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
@@ -118,11 +118,11 @@ public class DefaultLightsClient extends BaseClient<LightsHandler> implements Li
     }
 
     @Override
-    public ClientResponse<String> updateState(String id, State state) {
+    public ClientResponse<Empty> updateState(String id, State state) {
         Response serverResponse = null;
         try {
             serverResponse = restApi().updateState(authorizedUser, id, state);
-            JavaType javaType = simpleResolver().get(String.class);
+            JavaType javaType = simpleResolver().get(Empty.class);
             return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
