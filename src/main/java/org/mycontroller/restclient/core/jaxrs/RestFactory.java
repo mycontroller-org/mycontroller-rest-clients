@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Jeeva Kandasamy (jkandasa@gmail.com)
+ * Copyright 2015-2017 Jeeva Kandasamy (jkandasa@gmail.com)
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -76,7 +76,7 @@ public class RestFactory<T> {
         final HttpClient httpclient;
         if (clientInfo.getEndpointUri().toString().startsWith("https")
                 && clientInfo.getTrustHostType() == TRUST_HOST_TYPE.ANY) {
-            httpclient = getHttpClient();
+            httpclient = getHttpClientTrustAll();
         } else {
             httpclient = HttpClientBuilder.create().build();
         }
@@ -118,7 +118,7 @@ public class RestFactory<T> {
     }
 
     //trust any host
-    private HttpClient getHttpClient() {
+    public HttpClient getHttpClientTrustAll() {
         SSLContextBuilder builder = new SSLContextBuilder();
         try {
             KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
