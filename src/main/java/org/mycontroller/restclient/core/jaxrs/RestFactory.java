@@ -16,13 +16,6 @@
  */
 package org.mycontroller.restclient.core.jaxrs;
 
-import java.security.KeyStore;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
-
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -30,15 +23,9 @@ import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContextBuilder;
 import org.jboss.resteasy.client.jaxrs.ProxyBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
@@ -50,14 +37,11 @@ import org.mycontroller.restclient.core.jaxrs.fasterxml.jackson.MCJacksonJson2Pr
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * @author Jeeva Kandasamy (jkandasa)
  * @since 2.0.0
  */
 
-@Slf4j
 public class RestFactory<T> {
 
     private final ClassLoader classLoader;
@@ -74,11 +58,12 @@ public class RestFactory<T> {
 
     public T createAPI(ClientInfo clientInfo) {
         final HttpClient httpclient;
+        McHttpClient mcHttpClient = new McHttpClient();
         if (clientInfo.getEndpointUri().toString().startsWith("https")
                 && clientInfo.getTrustHostType() == TRUST_HOST_TYPE.ANY) {
-            httpclient = getHttpClientTrustAll();
+            httpclient = mcHttpClient.getHttpClientTrustAll();
         } else {
-            httpclient = HttpClientBuilder.create().build();
+            httpclient = mcHttpClient.getHttpClient();
         }
 
         ApacheHttpClient4Engine engine = null;
@@ -115,36 +100,5 @@ public class RestFactory<T> {
             proxyBuilder = proxyBuilder.classloader(classLoader);
         }
         return proxyBuilder.build();
-    }
-
-    //trust any host
-    public HttpClient getHttpClientTrustAll() {
-        SSLContextBuilder builder = new SSLContextBuilder();
-        try {
-            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            builder.loadTrustMaterial(keyStore, new TrustStrategy() {
-                @Override
-                public boolean isTrusted(X509Certificate[] trustedCert, String nameConstraints)
-                        throws CertificateException {
-                    return true;
-                }
-            });
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build(),
-                    new McRestAnyHostnameVerifier());
-            CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
-            return httpclient;
-        } catch (Exception ex) {
-            _logger.error("Exception, ", ex);
-            return null;
-        }
-    }
-
-    //Trust all hostname
-    class McRestAnyHostnameVerifier implements HostnameVerifier {
-        @Override
-        public boolean verify(String hostname, SSLSession session) {
-            return true;
-        }
-
     }
 }
