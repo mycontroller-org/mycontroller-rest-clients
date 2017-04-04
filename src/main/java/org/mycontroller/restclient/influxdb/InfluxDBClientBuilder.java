@@ -14,23 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mycontroller.standalone.restclient.plivo.model;
+package org.mycontroller.restclient.influxdb;
 
-import java.util.List;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import org.mycontroller.restclient.core.BaseClientBuilder;
+import org.mycontroller.restclient.core.ClientInfo;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 0.0.3
+ * @since 2.0.0
  */
-@Getter
-@ToString(includeFieldNames = true)
-@NoArgsConstructor
-public class MessageResponse {
-    private String message;
-    private List<String> message_uuid;
-    private String api_id;
+
+public class InfluxDBClientBuilder extends BaseClientBuilder<InfluxDBClient> {
+    public InfluxDBClient build() {
+        ClientInfo clientInfo = new ClientInfo(getUri(), getTrustHostType(), getUsername(), getPassword(),
+                getHeaders(), getProperties());
+        return new InfluxDBClientImpl(clientInfo);
+    }
 }

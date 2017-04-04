@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Jeeva Kandasamy (jkandasa@gmail.com)
+ * Copyright 2015-2017 Jeeva Kandasamy (jkandasa@gmail.com)
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,17 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mycontroller.standalone.restclient.influxdb;
+package org.mycontroller.restclient.influxdb.model;
 
-import org.mycontroller.standalone.restclient.ClientResponse;
-import org.mycontroller.standalone.restclient.IRestClient;
+import java.util.List;
+import java.util.Map;
+
+import lombok.Data;
+import lombok.ToString;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 1.0.0
+ * @since 2.0.0
  */
-public interface InfluxdbClient extends IRestClient {
-
-    ClientResponse<String> write(String key, String tags, Long timestamp, String data);
-
+@Data
+@ToString
+public class Series {
+    private String name;
+    private Map<String, String> tags;
+    private List<String> columns;
+    private List<List<Object>> values;
 }

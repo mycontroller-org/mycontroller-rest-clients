@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Jeeva Kandasamy (jkandasa@gmail.com)
+ * Copyright 2015-2017 Jeeva Kandasamy (jkandasa@gmail.com)
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,6 +45,7 @@ import org.jboss.resteasy.client.jaxrs.ProxyBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
+import org.mycontroller.restclient.core.TRUST_HOST_TYPE;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
@@ -63,40 +64,6 @@ public class RestFactory<T> {
     public RestFactory(Class<T> clazz) {
         classLoader = null;
         proxyClazz = clazz;
-    }
-
-    public enum TRUST_HOST_TYPE {
-        DEFAULT("Default"),
-        ANY("Any");
-        public static TRUST_HOST_TYPE get(int id) {
-            for (TRUST_HOST_TYPE type : values()) {
-                if (type.ordinal() == id) {
-                    return type;
-                }
-            }
-            throw new IllegalArgumentException(String.valueOf(id));
-        }
-
-        private String value;
-
-        private TRUST_HOST_TYPE(String value) {
-            this.value = value;
-        }
-
-        public String getText() {
-            return this.value;
-        }
-
-        public static TRUST_HOST_TYPE fromString(String text) {
-            if (text != null) {
-                for (TRUST_HOST_TYPE type : TRUST_HOST_TYPE.values()) {
-                    if (text.equalsIgnoreCase(type.getText())) {
-                        return type;
-                    }
-                }
-            }
-            return null;
-        }
     }
 
     public T createAPI(URI uri, String username, String password, TRUST_HOST_TYPE trustHostType) {

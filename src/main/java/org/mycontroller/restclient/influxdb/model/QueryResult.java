@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Jeeva Kandasamy (jkandasa@gmail.com)
+ * Copyright 2015-2017 Jeeva Kandasamy (jkandasa@gmail.com)
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,31 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mycontroller.standalone.restclient.influxdb;
+package org.mycontroller.restclient.influxdb.model;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import java.util.List;
+
+import lombok.Data;
+import lombok.ToString;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 1.0.0
+ * @since 2.0.0
  */
-@Path("/")
-@Produces(MediaType.TEXT_PLAIN)
-@Consumes(MediaType.TEXT_PLAIN)
-public interface InfluxdbRestAPI {
-
-    @POST
-    @Path("write")
-    Response write(
-            @QueryParam("db") String database,
-            @QueryParam("u") String username,
-            @QueryParam("p") String password,
-            String data);
-
+@Data
+@ToString
+public class QueryResult {
+    private List<Result> results;
+    private String error;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Jeeva Kandasamy (jkandasa@gmail.com)
+ * Copyright 2015-2017 Jeeva Kandasamy (jkandasa@gmail.com)
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +18,10 @@ package org.mycontroller.standalone.restclient.emoncms;
 
 import java.net.URI;
 
+import org.mycontroller.restclient.core.TRUST_HOST_TYPE;
 import org.mycontroller.standalone.restclient.ClientBase;
 import org.mycontroller.standalone.restclient.ClientResponse;
 import org.mycontroller.standalone.restclient.RestFactory;
-import org.mycontroller.standalone.restclient.RestFactory.TRUST_HOST_TYPE;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)

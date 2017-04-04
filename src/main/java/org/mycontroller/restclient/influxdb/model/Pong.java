@@ -14,23 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mycontroller.standalone.restclient.plivo.model;
+package org.mycontroller.restclient.influxdb.model;
 
-import java.util.List;
-
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 0.0.3
+ * @since 2.0.0
  */
 @Getter
-@ToString(includeFieldNames = true)
-@NoArgsConstructor
-public class MessageResponse {
-    private String message;
-    private List<String> message_uuid;
-    private String api_id;
+@ToString
+@Builder
+public class Pong {
+    private String version = "unknown";
+    private boolean reachable = false;
+    private String errorMessage;
+    private Integer statusCode;
 }
