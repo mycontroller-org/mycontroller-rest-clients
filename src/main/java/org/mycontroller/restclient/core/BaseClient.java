@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Jeeva Kandasamy (jkandasa@gmail.com)
+ * Copyright 2015-2017 Jeeva Kandasamy (jkandasa@gmail.com)
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,13 @@ package org.mycontroller.restclient.core;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.HashMap;
+import java.util.List;
+
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.mycontroller.restclient.core.jaxrs.RestFactory;
 import org.mycontroller.restclient.core.typeresolvers.CollectionJavaTypeResolver;
 import org.mycontroller.restclient.core.typeresolvers.MapJavaTypeResolver;
@@ -31,17 +38,33 @@ import org.mycontroller.restclient.core.typeresolvers.SimpleJavaTypeResolver;
 public abstract class BaseClient<T> {
 
     private T restAPI;
+    private WebTarget webTarget;
     private SimpleJavaTypeResolver simpleJavaTypeResolver = new SimpleJavaTypeResolver();
     private CollectionJavaTypeResolver collectionJavaTypeResolver = new CollectionJavaTypeResolver();
     private MapJavaTypeResolver mapJavaTypeResolver = new MapJavaTypeResolver();
 
     public BaseClient(ClientInfo clientInfo, RestFactory<T> restFactory) {
         checkNotNull(clientInfo);
+        webTarget = restFactory.webTarget(clientInfo);
         restAPI = restFactory.createAPI(clientInfo);
     }
 
     public T restApi() {
         return this.restAPI;
+    }
+
+    public Response get(String path, HashMap<String, Object> queryParams) {
+        WebTarget wt = webTarget.path(path);
+        if (queryParams != null) {
+            for (String key : queryParams.keySet()) {
+                if (queryParams.get(key) instanceof List<?>) {
+                    wt = wt.queryParam(key, ((List<?>) queryParams.get(key)).toArray());
+                } else {
+                    wt = wt.queryParam(key, queryParams.get(key));
+                }
+            }
+        }
+        return wt.request().accept(MediaType.APPLICATION_JSON).get();
     }
 
     public SimpleJavaTypeResolver simpleResolver() {

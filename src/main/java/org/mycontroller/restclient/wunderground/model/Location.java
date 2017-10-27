@@ -42,7 +42,9 @@ public class Location {
     private String id;
     private String l;
     private Double lat;
+    private Double latitude;
     private Double lon;
+    private Double longitude;
     private String magic;
     private NearbyWeatherStations nearby_weather_stations;
     private String neighborhood;

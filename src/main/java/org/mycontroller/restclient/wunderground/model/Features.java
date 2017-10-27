@@ -81,7 +81,7 @@ public class Features {
 
     public static Features getDefault() {
         return Features.builder()
-                //.conditions(1)
+                .conditions(1)
                 .geolookup(1)
                 .build();
     }

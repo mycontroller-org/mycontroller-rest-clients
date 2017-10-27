@@ -34,6 +34,7 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.TEXT_PLAIN)
 public interface WundergroundHandler {
 
+    // for now didn't use this proxy. encode problem on path for 'features' and 'location'
     @GET
     @Path("/{key}/{features}/lang:{languageCode}/q/{location}.json")
     Response query(@PathParam("key") String apiKey,

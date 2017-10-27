@@ -43,8 +43,8 @@ public class CurrentObservation {
     private String feelslike_f;
     private String feelslike_string;
     private String forecast_url;
-    private Float heat_index_c;
-    private Float heat_index_f;
+    private String heat_index_c;
+    private String heat_index_f;
     private String heat_index_string;
     private String history_url;
     private String icon;

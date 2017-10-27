@@ -18,6 +18,8 @@ package org.mycontroller.restclient.wunderground;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import java.util.HashMap;
+
 import javax.ws.rs.core.Response;
 
 import org.mycontroller.restclient.core.BaseClient;
@@ -52,9 +54,22 @@ public class WundergroundClientImpl extends BaseClient<WundergroundHandler> impl
     public ClientResponse<WUResponse> query(Criteria criteria) {
         Response serverResponse = null;
         try {
-            _logger.info("{}", criteria);
-            serverResponse = restApi().query(apiKey, criteria.getFeatures().queryString(), criteria.getLanguageCode(),
-                    criteria.getLocation(), criteria.getGeoIP());
+            _logger.debug("{}", criteria);
+            StringBuilder builder = new StringBuilder();
+            // sample url: /api/{key}/{features}/lang:{languageCode}/q/{location}.json
+            builder.append("/api/").append(apiKey)
+                    .append("/").append(criteria.getFeatures().queryString())
+                    .append("/lang:").append(criteria.getLanguageCode())
+                    .append("/q/").append(criteria.getLocation()).append(".json");
+
+            HashMap<String, Object> queryParams = new HashMap<String, Object>();
+            if (criteria.getGeoIP() != null) {
+                queryParams.put("geo_ip", criteria.getGeoIP());
+            }
+
+            serverResponse = get(builder.toString(), queryParams);
+            //serverResponse = restApi().query(apiKey, criteria.getFeatures().queryString(), criteria.getLanguageCode(),
+            //        criteria.getLocation(), criteria.getGeoIP());
             JavaType javaType = simpleResolver().get(WUResponse.class);
             ClientResponse<WUResponse> result = new DefaultClientResponse<>(javaType, serverResponse,
                     ResponseCodes.GET_SUCCESS_200);
@@ -66,5 +81,4 @@ public class WundergroundClientImpl extends BaseClient<WundergroundHandler> impl
         }
 
     }
-
 }

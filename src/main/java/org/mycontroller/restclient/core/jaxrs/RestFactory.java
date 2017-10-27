@@ -16,6 +16,8 @@
  */
 package org.mycontroller.restclient.core.jaxrs;
 
+import javax.ws.rs.client.WebTarget;
+
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -46,6 +48,7 @@ public class RestFactory<T> {
 
     private final ClassLoader classLoader;
     private Class<T> apiClassType;
+    private ResteasyClient client = null;
 
     public RestFactory(Class<T> clz) {
         classLoader = null;
@@ -56,46 +59,58 @@ public class RestFactory<T> {
         this.classLoader = classLoader;
     }
 
+    private ResteasyClient getResteasyClient(ClientInfo clientInfo) {
+        if (client == null) {
+            final HttpClient httpclient;
+            McHttpClient mcHttpClient = new McHttpClient();
+            if (clientInfo.getEndpointUri().toString().startsWith("https")
+                    && clientInfo.getTrustHostType() == TRUST_HOST_TYPE.ANY) {
+                httpclient = mcHttpClient.getHttpClientTrustAll();
+            } else {
+                httpclient = mcHttpClient.getHttpClient();
+            }
+
+            ApacheHttpClient4Engine engine = null;
+            if (clientInfo.getUsername().isPresent() && clientInfo.getPassword().isPresent()) {
+                HttpHost targetHost = new HttpHost(clientInfo.getEndpointUri().getHost(), clientInfo.getEndpointUri()
+                        .getPort());
+                CredentialsProvider credsProvider = new BasicCredentialsProvider();
+                credsProvider
+                        .setCredentials(
+                                new AuthScope(targetHost.getHostName(), targetHost.getPort()),
+                                new UsernamePasswordCredentials(clientInfo.getUsername().get(), clientInfo
+                                        .getPassword().get()));
+                // Create AuthCache instance
+                AuthCache authCache = new BasicAuthCache();
+                // Generate BASIC scheme object and add it to the local auth cache
+                BasicScheme basicAuth = new BasicScheme();
+                authCache.put(targetHost, basicAuth);
+                // Add AuthCache to the execution context
+                HttpClientContext context = HttpClientContext.create();
+                context.setCredentialsProvider(credsProvider);
+                context.setAuthCache(authCache);
+                engine = new ApacheHttpClient4Engine(httpclient, context);
+            } else {
+                engine = new ApacheHttpClient4Engine(httpclient);
+            }
+            client = new ResteasyClientBuilder().httpEngine(engine).build();
+            client.register(JacksonJaxbJsonProvider.class);
+            client.register(JacksonObjectMapperProvider.class);
+            client.register(RestRequestFilter.class);
+            client.register(new RequestHeadersFilter(clientInfo.getHeaders()));
+            client.register(RestResponseFilter.class);
+            client.register(MCJacksonJson2Provider.class);
+        }
+        return client;
+    }
+
+    public WebTarget webTarget(ClientInfo clientInfo) {
+        return getResteasyClient(clientInfo).target(clientInfo.getEndpointUri());
+    }
+
     public T createAPI(ClientInfo clientInfo) {
-        final HttpClient httpclient;
-        McHttpClient mcHttpClient = new McHttpClient();
-        if (clientInfo.getEndpointUri().toString().startsWith("https")
-                && clientInfo.getTrustHostType() == TRUST_HOST_TYPE.ANY) {
-            httpclient = mcHttpClient.getHttpClientTrustAll();
-        } else {
-            httpclient = mcHttpClient.getHttpClient();
-        }
-
-        ApacheHttpClient4Engine engine = null;
-        if (clientInfo.getUsername().isPresent() && clientInfo.getPassword().isPresent()) {
-            HttpHost targetHost = new HttpHost(clientInfo.getEndpointUri().getHost(), clientInfo.getEndpointUri()
-                    .getPort());
-            CredentialsProvider credsProvider = new BasicCredentialsProvider();
-            credsProvider.setCredentials(
-                    new AuthScope(targetHost.getHostName(), targetHost.getPort()),
-                    new UsernamePasswordCredentials(clientInfo.getUsername().get(), clientInfo.getPassword().get()));
-            // Create AuthCache instance
-            AuthCache authCache = new BasicAuthCache();
-            // Generate BASIC scheme object and add it to the local auth cache
-            BasicScheme basicAuth = new BasicScheme();
-            authCache.put(targetHost, basicAuth);
-            // Add AuthCache to the execution context
-            HttpClientContext context = HttpClientContext.create();
-            context.setCredentialsProvider(credsProvider);
-            context.setAuthCache(authCache);
-            engine = new ApacheHttpClient4Engine(httpclient, context);
-        } else {
-            engine = new ApacheHttpClient4Engine(httpclient);
-        }
-        final ResteasyClient client = new ResteasyClientBuilder().httpEngine(engine).build();
-        client.register(JacksonJaxbJsonProvider.class);
-        client.register(JacksonObjectMapperProvider.class);
-        client.register(RestRequestFilter.class);
-        client.register(new RequestHeadersFilter(clientInfo.getHeaders()));
-        client.register(RestResponseFilter.class);
-        client.register(MCJacksonJson2Provider.class);
-
-        ProxyBuilder<T> proxyBuilder = client.target(clientInfo.getEndpointUri()).proxyBuilder(apiClassType);
+        ProxyBuilder<T> proxyBuilder = getResteasyClient(clientInfo).target(clientInfo.getEndpointUri()).proxyBuilder(
+                apiClassType);
         if (classLoader != null) {
             proxyBuilder = proxyBuilder.classloader(classLoader);
         }
