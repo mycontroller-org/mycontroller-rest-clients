@@ -41,6 +41,8 @@ public class InfluxDBClient extends McHttpClient {
     private String baseUrl;
     private McHeader header;
 
+    private StringBuilder dataBuilder = new StringBuilder();
+
     public InfluxDBClient(String baseUrl, String database, TRUST_HOST_TYPE trustHostType) {
         this(baseUrl, null, null, database, trustHostType);
     }
@@ -63,6 +65,19 @@ public class InfluxDBClient extends McHttpClient {
         header = McHeader.getDefault();
         header.addJsonContentType();
         header.addAuthorization(username, password);
+    }
+
+    public String getData(String measurement, String tags, String fieldName, String value, Long timestamp) {
+        //timestamp format: 1434067467000000000
+        dataBuilder.setLength(0);
+        dataBuilder.append(measurement);
+        if (tags != null && tags.length() > 0) {
+            dataBuilder.append(",").append(tags.replaceAll(" ", "_"));
+        }
+        dataBuilder
+                .append(" ").append(fieldName.replaceAll(" ", "_")).append("=").append(value)
+                .append(" ").append(timestamp).append("000000");
+        return dataBuilder.toString();
     }
 
     public Pong ping() {
