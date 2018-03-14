@@ -14,43 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mycontroller.restclient.wunderground.model;
+package org.mycontroller.restclient.philipshue.model;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.ToString;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
  * @since 2.0.0
  */
-@Getter
+
+@Data
 @ToString
-@Builder
-public class Criteria {
-    private Features features;
-    private String languageCode;
-    private String location;
-    private String geoIP;
-
-    public Features getFeatures() {
-        if (features == null) {
-            features = Features.getDefault();
-        }
-        return features;
-    }
-
-    public String getLanguageCode() {
-        if (languageCode == null) {
-            languageCode = "EN";
-        }
-        return languageCode;
-    }
-
-    public String getLocation() {
-        if (location == null) {
-            location = "autoip";
-        }
-        return location;
-    }
+public class LightState {
+    private State state;
+    private String type;
+    private String name;
+    private String modelid;
+    private String uniqueid;
+    private String manufacturername;
+    private String luminaireuniqueid;
+    private String swversion;
+    private Pointsymbol pointsymbol;
 }

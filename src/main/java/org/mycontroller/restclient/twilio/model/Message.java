@@ -14,43 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mycontroller.restclient.wunderground.model;
+package org.mycontroller.restclient.twilio.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.ToString;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 2.0.0
+ * @since 0.0.3
  */
-@Getter
-@ToString
 @Builder
-public class Criteria {
-    private Features features;
-    private String languageCode;
-    private String location;
-    private String geoIP;
-
-    public Features getFeatures() {
-        if (features == null) {
-            features = Features.getDefault();
-        }
-        return features;
-    }
-
-    public String getLanguageCode() {
-        if (languageCode == null) {
-            languageCode = "EN";
-        }
-        return languageCode;
-    }
-
-    public String getLocation() {
-        if (location == null) {
-            location = "autoip";
-        }
-        return location;
-    }
+@Data
+@ToString(includeFieldNames = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class Message {
+    @NonNull
+    private String to;
+    @NonNull
+    private String from;
+    @NonNull
+    private String body;
 }

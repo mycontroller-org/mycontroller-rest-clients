@@ -14,43 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mycontroller.restclient.wunderground.model;
+package org.mycontroller.restclient.pushbullet.model;
+
+import com.google.gson.annotations.SerializedName;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.ToString;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 2.0.0
+ * @since 0.0.3
  */
-@Getter
-@ToString
 @Builder
-public class Criteria {
-    private Features features;
-    private String languageCode;
-    private String location;
-    private String geoIP;
+@Data
+@ToString
+public class Push {
+    @SerializedName("device_iden")
+    private String deviceIden;
 
-    public Features getFeatures() {
-        if (features == null) {
-            features = Features.getDefault();
-        }
-        return features;
+    private String email;
+
+    @SerializedName("channel_tag")
+    private String channelTag;
+
+    @SerializedName("client_iden")
+    private String clientIden;
+
+    private String type;
+    private String title;
+    private String body;
+    private String url;
+
+    public void clearTargets() {
+        deviceIden = null;
+        email = null;
+        channelTag = null;
+        clientIden = null;
     }
 
-    public String getLanguageCode() {
-        if (languageCode == null) {
-            languageCode = "EN";
-        }
-        return languageCode;
-    }
-
-    public String getLocation() {
-        if (location == null) {
-            location = "autoip";
-        }
-        return location;
-    }
 }

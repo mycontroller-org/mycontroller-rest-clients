@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Jeeva Kandasamy (jkandasa@gmail.com)
+ * Copyright 2015-2018 Jeeva Kandasamy (jkandasa@gmail.com)
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,8 +28,8 @@ import lombok.ToString;
 @ToString
 @Builder
 public class Pong {
-    private String version = "unknown";
-    private boolean reachable = false;
+    private String version;
+    private boolean reachable;
     private String errorMessage;
     private Integer statusCode;
 }

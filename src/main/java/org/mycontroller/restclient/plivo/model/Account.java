@@ -14,43 +14,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mycontroller.restclient.wunderground.model;
+package org.mycontroller.restclient.plivo.model;
 
-import lombok.Builder;
+import com.google.gson.annotations.SerializedName;
+
 import lombok.Getter;
 import lombok.ToString;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 2.0.0
+ * @since 2.1.0
  */
+
 @Getter
 @ToString
-@Builder
-public class Criteria {
-    private Features features;
-    private String languageCode;
-    private String location;
-    private String geoIP;
+public class Account {
+    @SerializedName("account_type")
+    private String accountType;
 
-    public Features getFeatures() {
-        if (features == null) {
-            features = Features.getDefault();
-        }
-        return features;
-    }
+    private String address;
 
-    public String getLanguageCode() {
-        if (languageCode == null) {
-            languageCode = "EN";
-        }
-        return languageCode;
-    }
+    @SerializedName("api_id")
+    private String apiId;
 
-    public String getLocation() {
-        if (location == null) {
-            location = "autoip";
-        }
-        return location;
-    }
+    @SerializedName("auth_id")
+    private String authId;
+
+    @SerializedName("auto_recharge")
+    private Boolean autoRecharge;
+
+    @SerializedName("billing_mode")
+    private String billingMode;
+
+    @SerializedName("cash_credits")
+    private String cashCredits;
+
+    private String city;
+
+    private String name;
+
+    @SerializedName("resource_uri")
+    private String resourceUri;
+
+    private String state;
+
+    private String timezone;
+
 }

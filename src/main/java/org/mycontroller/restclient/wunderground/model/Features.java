@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Jeeva Kandasamy (jkandasa@gmail.com)
+ * Copyright 2015-2018 Jeeva Kandasamy (jkandasa@gmail.com)
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +32,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Features {
+    public static Features getDefault() {
+        return Features.builder()
+                .conditions(1)
+                .geolookup(1)
+                .build();
+    }
+
     private Integer alerts;
     private Integer almanac;
     private Integer astronomy;
@@ -47,7 +54,17 @@ public class Features {
     private Integer rawtide;
     private Integer tide;
     private Integer webcams;
+
     private Integer yesterday;
+
+    private void addToBuilder(StringBuilder builder, String feature, Integer value) {
+        if (value != null && value == 1) {
+            if (builder.length() > 0) {
+                builder.append("/");
+            }
+            builder.append(feature);
+        }
+    }
 
     public String queryString() {
         StringBuilder builder = new StringBuilder();
@@ -68,21 +85,5 @@ public class Features {
         addToBuilder(builder, "webcams", webcams);
         addToBuilder(builder, "yesterday", yesterday);
         return builder.toString();
-    }
-
-    private void addToBuilder(StringBuilder builder, String feature, Integer value) {
-        if (value != null && value == 1) {
-            if (builder.length() > 0) {
-                builder.append("/");
-            }
-            builder.append(feature);
-        }
-    }
-
-    public static Features getDefault() {
-        return Features.builder()
-                .conditions(1)
-                .geolookup(1)
-                .build();
     }
 }

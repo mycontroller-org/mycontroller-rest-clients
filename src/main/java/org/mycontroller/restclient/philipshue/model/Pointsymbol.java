@@ -14,43 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mycontroller.restclient.wunderground.model;
+package org.mycontroller.restclient.philipshue.model;
 
-import lombok.Builder;
-import lombok.Getter;
+import com.google.gson.annotations.SerializedName;
+
+import lombok.Data;
 import lombok.ToString;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
  * @since 2.0.0
  */
-@Getter
+
+@Data
 @ToString
-@Builder
-public class Criteria {
-    private Features features;
-    private String languageCode;
-    private String location;
-    private String geoIP;
-
-    public Features getFeatures() {
-        if (features == null) {
-            features = Features.getDefault();
-        }
-        return features;
-    }
-
-    public String getLanguageCode() {
-        if (languageCode == null) {
-            languageCode = "EN";
-        }
-        return languageCode;
-    }
-
-    public String getLocation() {
-        if (location == null) {
-            location = "autoip";
-        }
-        return location;
-    }
+public class Pointsymbol {
+    @SerializedName("1")
+    private String p_1;
+    @SerializedName("2")
+    private String p_2;
+    @SerializedName("3")
+    private String p_3;
+    @SerializedName("4")
+    private String p_4;
+    @SerializedName("5")
+    private String p_5;
+    @SerializedName("6")
+    private String p_6;
+    @SerializedName("7")
+    private String p_7;
+    @SerializedName("8")
+    private String p_8;
 }

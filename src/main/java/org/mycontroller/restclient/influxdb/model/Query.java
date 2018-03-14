@@ -14,43 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mycontroller.restclient.wunderground.model;
+package org.mycontroller.restclient.influxdb.model;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.ToString;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 2.0.0
+ * @since 2.1.0
  */
-@Getter
-@ToString
+
 @Builder
-public class Criteria {
-    private Features features;
-    private String languageCode;
-    private String location;
-    private String geoIP;
+@Data
+@ToString
+public class Query {
+    private String db;
+    private String q;
+    private boolean pretty;
+    private String epoch;
 
-    public Features getFeatures() {
-        if (features == null) {
-            features = Features.getDefault();
-        }
-        return features;
-    }
-
-    public String getLanguageCode() {
-        if (languageCode == null) {
-            languageCode = "EN";
-        }
-        return languageCode;
-    }
-
-    public String getLocation() {
-        if (location == null) {
-            location = "autoip";
-        }
-        return location;
+    public Map<String, Object> getQueryMap() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("db", db);
+        map.put("q", q);
+        map.put("pretty", pretty);
+        map.put("epoch", epoch);
+        return map;
     }
 }

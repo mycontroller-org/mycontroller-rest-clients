@@ -14,43 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mycontroller.restclient.wunderground.model;
+package org.mycontroller.restclient.pushbullet.model;
 
-import lombok.Builder;
+import com.google.gson.annotations.SerializedName;
+
 import lombok.Getter;
 import lombok.ToString;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 2.0.0
+ * @since 0.0.3
  */
 @Getter
 @ToString
-@Builder
-public class Criteria {
-    private Features features;
-    private String languageCode;
-    private String location;
-    private String geoIP;
+public class Device {
+    private Boolean active;
+    private String iden;
+    private Float created;
+    private Float modified;
+    private String icon;
+    private String nickname;
 
-    public Features getFeatures() {
-        if (features == null) {
-            features = Features.getDefault();
-        }
-        return features;
-    }
+    @SerializedName("generated_nickname")
+    private Boolean generatedNickname;
 
-    public String getLanguageCode() {
-        if (languageCode == null) {
-            languageCode = "EN";
-        }
-        return languageCode;
-    }
+    private String manufacturer;
+    private String model;
 
-    public String getLocation() {
-        if (location == null) {
-            location = "autoip";
-        }
-        return location;
-    }
+    @SerializedName("app_version")
+    private Integer appVersion;
+
+    private String fingerprint;
+
+    @SerializedName("key_fingerprint")
+    private String keyFingerprint;
+
+    @SerializedName("push_token")
+    private String pushToken;
+
+    @SerializedName("has_sms")
+    private String hasSms;
+
 }

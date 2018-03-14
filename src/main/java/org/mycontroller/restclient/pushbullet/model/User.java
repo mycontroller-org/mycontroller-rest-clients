@@ -14,43 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mycontroller.restclient.wunderground.model;
+package org.mycontroller.restclient.pushbullet.model;
 
-import lombok.Builder;
+import com.google.gson.annotations.SerializedName;
+
 import lombok.Getter;
 import lombok.ToString;
 
 /**
  * @author Jeeva Kandasamy (jkandasa)
- * @since 2.0.0
+ * @since 0.0.3
  */
 @Getter
 @ToString
-@Builder
-public class Criteria {
-    private Features features;
-    private String languageCode;
-    private String location;
-    private String geoIP;
+public class User {
+    private Boolean active;
+    private String iden;
+    private Float created;
+    private Float modified;
+    private String email;
+    private String name;
 
-    public Features getFeatures() {
-        if (features == null) {
-            features = Features.getDefault();
-        }
-        return features;
-    }
+    @SerializedName("email_normalized")
+    private String emailNormalized;
 
-    public String getLanguageCode() {
-        if (languageCode == null) {
-            languageCode = "EN";
-        }
-        return languageCode;
-    }
+    @SerializedName("image_url")
+    private String imageUrl;
 
-    public String getLocation() {
-        if (location == null) {
-            location = "autoip";
-        }
-        return location;
-    }
+    @SerializedName("max_upload_size")
+    private Long maxUploadSize;
+
 }

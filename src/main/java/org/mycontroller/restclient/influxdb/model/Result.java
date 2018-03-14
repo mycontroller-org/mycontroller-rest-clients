@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Jeeva Kandasamy (jkandasa@gmail.com)
+ * Copyright 2015-2018 Jeeva Kandasamy (jkandasa@gmail.com)
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@ package org.mycontroller.restclient.influxdb.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import lombok.Data;
 import lombok.ToString;
@@ -31,7 +31,7 @@ import lombok.ToString;
 @ToString
 public class Result {
     private List<Series> series;
-    @JsonProperty("statement_id")
+    @SerializedName("statement_id")
     private Integer statementId;
     private String error;
 }

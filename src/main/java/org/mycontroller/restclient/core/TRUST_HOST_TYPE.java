@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Jeeva Kandasamy (jkandasa@gmail.com)
+ * Copyright 2015-2018 Jeeva Kandasamy (jkandasa@gmail.com)
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,6 +25,17 @@ public enum TRUST_HOST_TYPE {
 
     DEFAULT("Default"),
     ANY("Any");
+    public static TRUST_HOST_TYPE fromString(String text) {
+        if (text != null) {
+            for (TRUST_HOST_TYPE type : TRUST_HOST_TYPE.values()) {
+                if (text.equalsIgnoreCase(type.getText())) {
+                    return type;
+                }
+            }
+        }
+        return null;
+    }
+
     public static TRUST_HOST_TYPE get(int id) {
         for (TRUST_HOST_TYPE type : values()) {
             if (type.ordinal() == id) {
@@ -42,17 +53,6 @@ public enum TRUST_HOST_TYPE {
 
     public String getText() {
         return this.value;
-    }
-
-    public static TRUST_HOST_TYPE fromString(String text) {
-        if (text != null) {
-            for (TRUST_HOST_TYPE type : TRUST_HOST_TYPE.values()) {
-                if (text.equalsIgnoreCase(type.getText())) {
-                    return type;
-                }
-            }
-        }
-        return null;
     }
 
 }
