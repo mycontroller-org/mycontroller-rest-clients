@@ -34,15 +34,13 @@ import org.mycontroller.restclient.philipshue.model.State;
 
 public class LightsClient extends McHttpClient {
     private String username;
-    private String password;
 
     private String baseUrl;
     private McHeader header;
 
-    public LightsClient(String baseUrl, String username, String password, TRUST_HOST_TYPE trustHostType) {
+    public LightsClient(String baseUrl, String username, TRUST_HOST_TYPE trustHostType) {
         super(trustHostType == null ? TRUST_HOST_TYPE.DEFAULT : trustHostType);
         this.username = username;
-        this.password = password;
         if (baseUrl.endsWith("/")) {
             this.baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
         } else {
@@ -55,7 +53,6 @@ public class LightsClient extends McHttpClient {
         baseUrl = MessageFormat.format("{0}/api/{1}", baseUrl, username);
         header = McHeader.getDefault();
         header.addJsonContentType();
-        header.addAuthorization(username, password);
     }
 
     public void delete(String id) {

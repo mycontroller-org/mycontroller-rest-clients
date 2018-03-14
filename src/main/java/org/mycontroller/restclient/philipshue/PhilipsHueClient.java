@@ -26,8 +26,8 @@ import org.mycontroller.restclient.core.TRUST_HOST_TYPE;
 public class PhilipsHueClient {
     private LightsClient lightsClient;
 
-    public PhilipsHueClient(String baseUrl, String username, String password, TRUST_HOST_TYPE trustHostType) {
-        lightsClient = new LightsClient(baseUrl, username, password, trustHostType);
+    public PhilipsHueClient(String baseUrl, String username, TRUST_HOST_TYPE trustHostType) {
+        lightsClient = new LightsClient(baseUrl, username, trustHostType);
     }
 
     public LightsClient lights() {
