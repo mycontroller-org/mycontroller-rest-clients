@@ -51,15 +51,15 @@ public class LightsClient extends McHttpClient {
         initClient();
     }
 
-    public void delete(String id) {
-        doDelete(baseUrl + MessageFormat.format("/lights/{0}", id), header, STATUS_CODE.OK.getCode());
-    }
-
     private void initClient() {
         baseUrl = MessageFormat.format("{0}/api/{1}", baseUrl, username);
         header = McHeader.getDefault();
         header.addJsonContentType();
         header.addAuthorization(username, password);
+    }
+
+    public void delete(String id) {
+        doDelete(baseUrl + MessageFormat.format("/lights/{0}", id), header, STATUS_CODE.OK.getCode());
     }
 
     public Map<String, LightState> listAll() {

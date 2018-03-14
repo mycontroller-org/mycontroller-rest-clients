@@ -49,16 +49,16 @@ public class PlivoClient extends McHttpClient {
         initClient();
     }
 
-    public Account accountDetails() {
-        McHttpResponse response = doGet(baseUrl + "/", header, STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), Account.class);
-    }
-
     private void initClient() {
         baseUrl = String.format("%s/%s/Account/%s", URL, VERSION, authId);
         header = McHeader.getDefault();
         header.addJsonContentType();
         header.addAuthorization(authId, authToken);
+    }
+
+    public Account accountDetails() {
+        McHttpResponse response = doGet(baseUrl + "/", header, STATUS_CODE.OK.getCode());
+        return gson.fromJson(response.getEntity(), Account.class);
     }
 
     @SuppressWarnings("unchecked")

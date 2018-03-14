@@ -49,6 +49,13 @@ public class PushbulletClient extends McHttpClient {
         initClient();
     }
 
+    private void initClient() {
+        baseUrl = MessageFormat.format("{0}/{1}", URL, VERSION);
+        header = McHeader.getDefault();
+        header.addJsonContentType();
+        header.put("Access-Token", authToken);
+    }
+
     public PushResponse createPush(Push push) {
         McHttpResponse response = doPost(baseUrl + "/pushes", header, toJsonString(push), STATUS_CODE.OK.getCode());
         return gson.fromJson(response.getEntity(), PushResponse.class);
@@ -62,13 +69,6 @@ public class PushbulletClient extends McHttpClient {
     public List<Device> devices() {
         McHttpResponse response = doGet(baseUrl + "/devices", header, STATUS_CODE.OK.getCode());
         return gson.fromJson(response.getEntity(), Devices.class).getDevices();
-    }
-
-    private void initClient() {
-        baseUrl = MessageFormat.format("{0}/{1}", URL, VERSION);
-        header = McHeader.getDefault();
-        header.addJsonContentType();
-        header.put("Access-Token", authToken);
     }
 
 }

@@ -43,6 +43,10 @@ public class PhantIOClient extends McHttpClient {
     private String baseUrl;
     private McHeader header;
 
+    public PhantIOClient(String publicKey, String privateKey, TRUST_HOST_TYPE trustHostType) {
+        this(DEFAULT_URL, publicKey, privateKey, trustHostType);
+    }
+
     public PhantIOClient(String baseUrl, String publicKey, String privateKey, TRUST_HOST_TYPE trustHostType) {
         super(trustHostType == null ? TRUST_HOST_TYPE.DEFAULT : trustHostType);
         this.publicKey = publicKey;
@@ -55,8 +59,10 @@ public class PhantIOClient extends McHttpClient {
         initClient();
     }
 
-    public PhantIOClient(String publicKey, String privateKey, TRUST_HOST_TYPE trustHostType) {
-        this(DEFAULT_URL, publicKey, privateKey, trustHostType);
+    private void initClient() {
+        header = McHeader.getDefault();
+        header.addJsonContentType();
+        header.put("Phant-Private-Key", privateKey);
     }
 
     public String clear() {
@@ -76,12 +82,6 @@ public class PhantIOClient extends McHttpClient {
         McHttpResponse response = doGet(baseUrl + MessageFormat.format("output/{0}.json", publicKey),
                 queryParms, header, STATUS_CODE.OK.getCode());
         return gson.fromJson(response.getEntity(), listOfMapType());
-    }
-
-    private void initClient() {
-        header = McHeader.getDefault();
-        header.addJsonContentType();
-        header.put("Phant-Private-Key", privateKey);
     }
 
     public PostResponse post(Map<String, Object> data) {
