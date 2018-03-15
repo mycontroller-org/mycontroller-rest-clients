@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.mycontroller</groupId>
     <artifactId>mycontroller-parent</artifactId>
-    <version>33</version>
+    <version>34</version>
   </parent>
 
   <artifactId>mycontroller-rest-clients</artifactId>
