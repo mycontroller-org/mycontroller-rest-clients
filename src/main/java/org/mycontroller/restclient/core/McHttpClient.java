@@ -303,7 +303,7 @@ public class McHttpClient {
         }
     }
 
-    protected String getHeader(McHttpResponse response, String name) {
+    public String getHeader(McHttpResponse response, String name) {
         Header[] headers = response.getHeaders();
         for (int index = 0; index < headers.length; index++) {
             Header header = headers[index];
@@ -314,14 +314,14 @@ public class McHttpClient {
         return null;
     }
 
-    protected void updateOnNull(Map<String, Object> data, String key, Object value) {
+    public void updateOnNull(Map<String, Object> data, String key, Object value) {
         if (data.get(key) == null) {
             data.put(key, value);
         }
     }
 
     // validate response
-    protected void validateResponse(McHttpResponse response, Integer expectedResponseCode) {
+    public void validateResponse(McHttpResponse response, Integer expectedResponseCode) {
         _logger.debug("{}", response);
         if (expectedResponseCode != null) {
             if (!response.getResponseCode().equals(expectedResponseCode)) {
@@ -331,19 +331,19 @@ public class McHttpClient {
         }
     }
 
-    protected SimpleJavaTypeResolver simpleResolver() {
+    public SimpleJavaTypeResolver simpleResolver() {
         return simpleJavaTypeResolver;
     }
 
-    protected CollectionJavaTypeResolver collectionResolver() {
+    public CollectionJavaTypeResolver collectionResolver() {
         return collectionJavaTypeResolver;
     }
 
-    protected MapJavaTypeResolver mapResolver() {
+    public MapJavaTypeResolver mapResolver() {
         return mapJavaTypeResolver;
     }
 
-    protected Object readValue(String entity, JavaType javaType) {
+    public Object readValue(String entity, JavaType javaType) {
         try {
             return mapper.readValue(entity, javaType);
         } catch (IOException ex) {
@@ -352,7 +352,7 @@ public class McHttpClient {
         }
     }
 
-    protected String toJsonString(Object object) {
+    public String toJsonString(Object object) {
         try {
             return mapper.writeValueAsString(object);
         } catch (JsonProcessingException ex) {
