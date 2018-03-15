@@ -21,6 +21,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+/**
+ * @author Jeeva Kandasamy (jkandasa)
+ * @since 2.1.0
+ */
+
 public class ClientObjectMapper extends ObjectMapper {
 
     /**  */
