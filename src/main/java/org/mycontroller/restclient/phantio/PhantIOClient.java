@@ -68,7 +68,7 @@ public class PhantIOClient extends McHttpClient {
     public String clear() {
         McHttpResponse response = doDelete(baseUrl + MessageFormat.format("/input/{0}", publicKey),
                 header, STATUS_CODE.ACCEPTED.getCode());
-        return (String) readValue(response.getEntity(), simpleResolver().get(String.class));
+        return response.getEntity();
     }
 
     public List<Map<String, Object>> get(Long limit) {

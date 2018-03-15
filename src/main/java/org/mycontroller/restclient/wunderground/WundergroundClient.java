@@ -75,6 +75,6 @@ public class WundergroundClient extends McHttpClient {
         updateOnNull(data, "action", "updateraw");
         updateOnNull(data, "dateutc", "now");
         McHttpResponse response = doGet(UPLOAD_URL, data, header, STATUS_CODE.OK.getCode());
-        return (String) readValue(response.getEntity(), simpleResolver().get(String.class));
+        return response.getEntity();
     }
 }

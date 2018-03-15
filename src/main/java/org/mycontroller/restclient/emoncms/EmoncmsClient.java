@@ -70,7 +70,7 @@ public class EmoncmsClient extends McHttpClient {
             queryParameters.put("time", timestampUnix);
         }
         McHttpResponse response = doGet(baseUrl + "/input/post", queryParameters, header, STATUS_CODE.OK.getCode());
-        return (String) readValue(response.getEntity(), simpleResolver().get(String.class));
+        return response.getEntity();
     }
 
 }
