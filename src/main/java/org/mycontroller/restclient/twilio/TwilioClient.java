@@ -57,7 +57,7 @@ public class TwilioClient extends McHttpClient {
     public MessageResponse sendMessage(Message message) {
         McHttpResponse response = doPost(baseUrl + "/Messages", header, toJsonString(message),
                 STATUS_CODE.CREATED.getCode());
-        return gson.fromJson(response.getEntity(), MessageResponse.class);
+        return (MessageResponse) readValue(response.getEntity(), simpleResolver().get(MessageResponse.class));
     }
 
 }

@@ -66,7 +66,7 @@ public class WundergroundClient extends McHttpClient {
                         apiKey, criteria.getFeatures().queryString(),
                         criteria.getLanguageCode(), criteria.getLocation()),
                 queryParams, header, STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), WUResponse.class);
+        return (WUResponse) readValue(response.getEntity(), simpleResolver().get(WUResponse.class));
     }
 
     // refer: http://wiki.wunderground.com/index.php/PWS_-_Upload_Protocol
@@ -75,6 +75,6 @@ public class WundergroundClient extends McHttpClient {
         updateOnNull(data, "action", "updateraw");
         updateOnNull(data, "dateutc", "now");
         McHttpResponse response = doGet(UPLOAD_URL, data, header, STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), String.class);
+        return (String) readValue(response.getEntity(), simpleResolver().get(String.class));
     }
 }

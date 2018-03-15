@@ -59,25 +59,29 @@ public class LightsClient extends McHttpClient {
         doDelete(baseUrl + MessageFormat.format("/lights/{0}", id), header, STATUS_CODE.OK.getCode());
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, LightState> listAll() {
         McHttpResponse response = doGet(baseUrl + "/lights", header, STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), mapType(String.class, LightState.class));
+        return (Map<String, LightState>) readValue(response.getEntity(),
+                mapResolver().get(Map.class, String.class, LightState.class));
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, LightState> listNew() {
         McHttpResponse response = doGet(baseUrl + "/lights/new", header, STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), mapType(String.class, LightState.class));
+        return (Map<String, LightState>) readValue(response.getEntity(),
+                mapResolver().get(Map.class, String.class, LightState.class));
     }
 
     public String searchNew() {
         McHttpResponse response = doPost(baseUrl + "/lights", header, null, STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), String.class);
+        return (String) readValue(response.getEntity(), simpleResolver().get(String.class));
     }
 
     public LightState state(String id) {
         McHttpResponse response = doGet(baseUrl + MessageFormat.format("/lights/{0}", id),
                 header, STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), LightState.class);
+        return (LightState) readValue(response.getEntity(), simpleResolver().get(LightState.class));
     }
 
     public void updateName(String id, String name) {

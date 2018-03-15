@@ -58,19 +58,20 @@ public class PlivoClient extends McHttpClient {
 
     public Account accountDetails() {
         McHttpResponse response = doGet(baseUrl + "/", header, STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), Account.class);
+        return (Account) readValue(response.getEntity(), simpleResolver().get(Account.class));
     }
 
     @SuppressWarnings("unchecked")
     public Map<String, Object> messageStatus(String messageUuid) {
         McHttpResponse response = doGet(baseUrl + MessageFormat.format("/Message/{0}/", messageUuid), header,
                 STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), Map.class);
+        return (Map<String, Object>) readValue(response.getEntity(),
+                mapResolver().get(Map.class, String.class, Object.class));
     }
 
     public MessageResponse sendMessage(Message message) {
         McHttpResponse response = doPost(baseUrl + "/Message/", header, toJsonString(message),
                 STATUS_CODE.ACCEPTED.getCode());
-        return gson.fromJson(response.getEntity(), MessageResponse.class);
+        return (MessageResponse) readValue(response.getEntity(), simpleResolver().get(MessageResponse.class));
     }
 }

@@ -58,17 +58,17 @@ public class PushbulletClient extends McHttpClient {
 
     public PushResponse createPush(Push push) {
         McHttpResponse response = doPost(baseUrl + "/pushes", header, toJsonString(push), STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), PushResponse.class);
+        return (PushResponse) readValue(response.getEntity(), simpleResolver().get(PushResponse.class));
     }
 
     public User currentUser() {
         McHttpResponse response = doGet(baseUrl + "/users/me", header, STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), User.class);
+        return (User) readValue(response.getEntity(), simpleResolver().get(User.class));
     }
 
     public List<Device> devices() {
         McHttpResponse response = doGet(baseUrl + "/devices", header, STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), Devices.class).getDevices();
+        return ((Devices) readValue(response.getEntity(), simpleResolver().get(Devices.class))).getDevices();
     }
 
 }

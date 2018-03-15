@@ -18,7 +18,7 @@ package org.mycontroller.restclient.influxdb.model;
 
 import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 import lombok.ToString;
@@ -31,7 +31,7 @@ import lombok.ToString;
 @ToString
 public class Result {
     private List<Series> series;
-    @SerializedName("statement_id")
+    @JsonProperty("statement_id")
     private Integer statementId;
     private String error;
 }

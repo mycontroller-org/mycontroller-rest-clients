@@ -16,8 +16,8 @@
  */
 package org.mycontroller.restclient.core;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.KeyStore;
@@ -33,13 +33,13 @@ import javax.net.ssl.SSLSession;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
@@ -49,9 +49,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.mycontroller.restclient.core.typeresolvers.CollectionJavaTypeResolver;
+import org.mycontroller.restclient.core.typeresolvers.MapJavaTypeResolver;
+import org.mycontroller.restclient.core.typeresolvers.SimpleJavaTypeResolver;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,15 +66,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class McHttpClient {
-
-    //Trust all hostname
-    class AnyHostnameVerifier implements HostnameVerifier {
-        @Override
-        public boolean verify(String hostname, SSLSession session) {
-            return true;
-        }
-
-    }
 
     // https://httpstatuses.com/
     public enum STATUS_CODE {
@@ -94,9 +89,13 @@ public class McHttpClient {
         }
     }
 
-    private HttpClient client = null;
+    private CloseableHttpClient client = null;
 
-    protected Gson gson = new Gson();
+    private ObjectMapper mapper = new ClientObjectMapper();
+
+    private SimpleJavaTypeResolver simpleJavaTypeResolver = new SimpleJavaTypeResolver();
+    private CollectionJavaTypeResolver collectionJavaTypeResolver = new CollectionJavaTypeResolver();
+    private MapJavaTypeResolver mapJavaTypeResolver = new MapJavaTypeResolver();
 
     public McHttpClient() {
         client = HttpClientBuilder.create().build();
@@ -110,6 +109,73 @@ public class McHttpClient {
         }
     }
 
+    protected CloseableHttpClient getHttpClient() {
+        return HttpClientBuilder.create().build();
+    }
+
+    //trust any host
+    private CloseableHttpClient getHttpClientTrustAll() {
+        SSLContextBuilder builder = new SSLContextBuilder();
+        try {
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            builder.loadTrustMaterial(keyStore, new TrustStrategy() {
+                @Override
+                public boolean isTrusted(X509Certificate[] trustedCert, String nameConstraints)
+                        throws CertificateException {
+                    return true;
+                }
+            });
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build(),
+                    new AnyHostnameVerifier());
+            CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+            return httpclient;
+        } catch (Exception ex) {
+            _logger.error("Exception, ", ex);
+            return null;
+        }
+    }
+
+    //Trust all hostname
+    class AnyHostnameVerifier implements HostnameVerifier {
+        @Override
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
+
+    }
+
+    private McHttpResponse execute(HttpUriRequest request) {
+        CloseableHttpResponse response = null;
+        try {
+            response = client.execute(request);
+            return McHttpResponse.get(request.getURI(), response);
+        } catch (Exception ex) {
+            _logger.debug("Exception,", ex);
+            throw new RuntimeException(
+                    MessageFormat.format("Failed to execute, Request:{0}, error:{1}", request, ex.getMessage()));
+        } finally {
+            if (response != null) {
+                try {
+                    response.close();
+                } catch (IOException ex) {
+                    _logger.error("Exception,", ex);
+                }
+            }
+        }
+    }
+
+    private URI getURI(String url, Map<String, Object> queryParameters) throws URISyntaxException {
+        if (queryParameters != null && !queryParameters.isEmpty()) {
+            List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
+            for (String key : queryParameters.keySet()) {
+                queryParams.add(new BasicNameValuePair(key, String.valueOf(queryParameters.get(key))));
+            }
+            return new URIBuilder(url).addParameters(queryParams).build();
+        } else {
+            return new URIBuilder(url).build();
+        }
+    }
+
     // GET, POST, PUT, DELETE methods start
 
     // HTTP DELETE request
@@ -119,20 +185,12 @@ public class McHttpClient {
 
     // HTTP DELETE request - primary method
     protected McHttpResponse doDelete(String url, McHeader header, Integer expectedResponseCode) {
-        try {
-            HttpDelete delete = new HttpDelete(url);
-            header.updateHeaders(delete);
-            HttpResponse response = client.execute(delete);
-            McHttpResponse httpResponse = McHttpResponse.get(delete.getURI(), response);
-            // validate response
-            validateResponse(httpResponse, expectedResponseCode);
-            return httpResponse;
-
-        } catch (Exception ex) {
-            _logger.error("Exception when calling url:[{}], headers:[{}]", url, header, ex);
-            throw new RuntimeException(
-                    MessageFormat.format("Failed to execute, url:{0}, error:{1}", url, ex.getMessage()));
-        }
+        HttpDelete delete = new HttpDelete(url);
+        header.updateHeaders(delete);
+        McHttpResponse httpResponse = execute(delete);
+        // validate response
+        validateResponse(httpResponse, expectedResponseCode);
+        return httpResponse;
     }
 
     // HTTP GET request
@@ -151,8 +209,8 @@ public class McHttpClient {
         try {
             HttpGet get = new HttpGet(getURI(url, queryParameters));
             header.updateHeaders(get);
-            HttpResponse response = client.execute(get);
-            McHttpResponse httpResponse = McHttpResponse.get(get.getURI(), response);
+            // execute
+            McHttpResponse httpResponse = execute(get);
             // validate response
             validateResponse(httpResponse, expectedResponseCode);
             return httpResponse;
@@ -175,8 +233,8 @@ public class McHttpClient {
             HttpPost post = new HttpPost(getURI(url, queryParameters));
             header.updateHeaders(post);
             post.setEntity(entity);
-            HttpResponse response = client.execute(post);
-            McHttpResponse httpResponse = McHttpResponse.get(post.getURI(), response);
+            // execute
+            McHttpResponse httpResponse = execute(post);
             // validate response
             validateResponse(httpResponse, expectedResponseCode);
             return httpResponse;
@@ -217,21 +275,14 @@ public class McHttpClient {
 
     // HTTP PUT request
     protected McHttpResponse doPut(String url, McHeader header, HttpEntity entity, Integer expectedResponseCode) {
-        try {
-            HttpPut put = new HttpPut(url);
-            header.updateHeaders(put);
-            put.setEntity(entity);
-            HttpResponse response = client.execute(put);
-            McHttpResponse httpResponse = McHttpResponse.get(put.getURI(), response);
-            // validate response
-            validateResponse(httpResponse, expectedResponseCode);
-            return httpResponse;
-
-        } catch (Exception ex) {
-            _logger.error("Exception when calling url:[{}], headers:[{}]", url, header, ex);
-            throw new RuntimeException(
-                    MessageFormat.format("Failed to execute, url:{0}, error:{1}", url, ex.getMessage()));
-        }
+        HttpPut put = new HttpPut(url);
+        header.updateHeaders(put);
+        put.setEntity(entity);
+        // execute
+        McHttpResponse httpResponse = execute(put);
+        // validate response
+        validateResponse(httpResponse, expectedResponseCode);
+        return httpResponse;
     }
 
     // HTTP PUT request
@@ -263,61 +314,6 @@ public class McHttpClient {
         return null;
     }
 
-    protected HttpClient getHttpClient() {
-        return HttpClientBuilder.create().build();
-    }
-
-    //trust any host
-    private HttpClient getHttpClientTrustAll() {
-        SSLContextBuilder builder = new SSLContextBuilder();
-        try {
-            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            builder.loadTrustMaterial(keyStore, new TrustStrategy() {
-                @Override
-                public boolean isTrusted(X509Certificate[] trustedCert, String nameConstraints)
-                        throws CertificateException {
-                    return true;
-                }
-            });
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build(),
-                    new AnyHostnameVerifier());
-            CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
-            return httpclient;
-        } catch (Exception ex) {
-            _logger.error("Exception, ", ex);
-            return null;
-        }
-    }
-
-    private URI getURI(String url, Map<String, Object> queryParameters) throws URISyntaxException {
-        if (queryParameters != null && !queryParameters.isEmpty()) {
-            List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
-            for (String key : queryParameters.keySet()) {
-                queryParams.add(new BasicNameValuePair(key, String.valueOf(queryParameters.get(key))));
-            }
-            return new URIBuilder(url).addParameters(queryParams).build();
-        } else {
-            return new URIBuilder(url).build();
-        }
-    }
-
-    protected Type listOfMapType() {
-        return new TypeToken<List<Map<String, Object>>>() {
-        }.getType();
-    }
-
-    protected Type listType(Class<?> cls) {
-        return TypeToken.getParameterized(List.class, cls).getType();
-    }
-
-    protected Type mapType(Class<?> clsKey, Class<?> clsValue) {
-        return TypeToken.getParameterized(Map.class, clsKey, clsValue).getType();
-    }
-
-    protected String toJsonString(Object object) {
-        return gson.toJson(object);
-    }
-
     protected void updateOnNull(Map<String, Object> data, String key, Object value) {
         if (data.get(key) == null) {
             data.put(key, value);
@@ -334,4 +330,35 @@ public class McHttpClient {
             }
         }
     }
+
+    protected SimpleJavaTypeResolver simpleResolver() {
+        return simpleJavaTypeResolver;
+    }
+
+    protected CollectionJavaTypeResolver collectionResolver() {
+        return collectionJavaTypeResolver;
+    }
+
+    protected MapJavaTypeResolver mapResolver() {
+        return mapJavaTypeResolver;
+    }
+
+    protected Object readValue(String entity, JavaType javaType) {
+        try {
+            return mapper.readValue(entity, javaType);
+        } catch (IOException ex) {
+            _logger.error("Exception: entity[{}]", entity, ex);
+            throw new RuntimeException("Exception: " + ex.getMessage());
+        }
+    }
+
+    protected String toJsonString(Object object) {
+        try {
+            return mapper.writeValueAsString(object);
+        } catch (JsonProcessingException ex) {
+            _logger.error("Exception,", ex);
+            throw new RuntimeException("Exception: " + ex.getMessage());
+        }
+    }
+
 }

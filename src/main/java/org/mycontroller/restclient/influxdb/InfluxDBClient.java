@@ -102,13 +102,13 @@ public class InfluxDBClient extends McHttpClient {
             query.setEpoch("ms");
         }
         McHttpResponse response = doGet(baseUrl + "/query", query.getQueryMap(), header, STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), QueryResult.class);
+        return (QueryResult) readValue(response.getEntity(), simpleResolver().get(QueryResult.class));
     }
 
     public QueryResult queryManagement(Query query) {
         query.setDb(database);
         McHttpResponse response = doPost(baseUrl + "/query", query.getQueryMap(), header, STATUS_CODE.OK.getCode());
-        return gson.fromJson(response.getEntity(), QueryResult.class);
+        return (QueryResult) readValue(response.getEntity(), simpleResolver().get(QueryResult.class));
     }
 
     public void write(String data) {
