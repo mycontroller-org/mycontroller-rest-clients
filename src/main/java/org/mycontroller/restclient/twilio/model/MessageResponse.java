@@ -19,7 +19,7 @@ package org.mycontroller.restclient.twilio.model;
 import java.util.Date;
 import java.util.Map;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -31,64 +31,64 @@ import lombok.ToString;
 @Getter
 @ToString
 public class MessageResponse {
-    @SerializedName("sid")
+    @JsonProperty("sid")
     private String sid;
 
-    @SerializedName("date_created")
+    @JsonProperty("date_created")
     private Date dateCreated;
 
-    @SerializedName("date_updated")
+    @JsonProperty("date_updated")
     private Date dateUpdated;
 
-    @SerializedName("date_sent")
+    @JsonProperty("date_sent")
     private Date dateSent;
 
-    @SerializedName("account_sid")
+    @JsonProperty("account_sid")
     private String accountSid;
 
-    @SerializedName("to")
+    @JsonProperty("to")
     private String to;
 
-    @SerializedName("from")
+    @JsonProperty("from")
     private String from;
 
-    @SerializedName("messaging_service_sid")
+    @JsonProperty("messaging_service_sid")
     private String messagingServiceSid;
 
-    @SerializedName("body")
+    @JsonProperty("body")
     private String body;
 
-    @SerializedName("status")
+    @JsonProperty("status")
     private String status;
 
-    @SerializedName("num_segments")
+    @JsonProperty("num_segments")
     private String numSegments;
 
-    @SerializedName("num_media")
+    @JsonProperty("num_media")
     private String numMedia;
 
-    @SerializedName("direction")
+    @JsonProperty("direction")
     private String direction;
 
-    @SerializedName("api_version")
+    @JsonProperty("api_version")
     private String apiVersion;
 
-    @SerializedName("price")
+    @JsonProperty("price")
     private String price;
 
-    @SerializedName("price_unit")
+    @JsonProperty("price_unit")
     private String priceUnit;
 
-    @SerializedName("error_code")
+    @JsonProperty("error_code")
     private String errorCode;
 
-    @SerializedName("error_message")
+    @JsonProperty("error_message")
     private String errorMessage;
 
-    @SerializedName("uri")
+    @JsonProperty("uri")
     private String uri;
 
-    @SerializedName("subresource_uris")
+    @JsonProperty("subresource_uris")
     private Map<String, Object> subresourceUris;
 
 }

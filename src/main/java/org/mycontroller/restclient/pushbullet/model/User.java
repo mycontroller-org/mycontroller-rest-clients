@@ -16,7 +16,7 @@
  */
 package org.mycontroller.restclient.pushbullet.model;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -35,13 +35,13 @@ public class User {
     private String email;
     private String name;
 
-    @SerializedName("email_normalized")
+    @JsonProperty("email_normalized")
     private String emailNormalized;
 
-    @SerializedName("image_url")
+    @JsonProperty("image_url")
     private String imageUrl;
 
-    @SerializedName("max_upload_size")
+    @JsonProperty("max_upload_size")
     private Long maxUploadSize;
 
 }

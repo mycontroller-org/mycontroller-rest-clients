@@ -16,7 +16,7 @@
  */
 package org.mycontroller.restclient.philipshue.model;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 import lombok.ToString;
@@ -29,20 +29,20 @@ import lombok.ToString;
 @Data
 @ToString
 public class Pointsymbol {
-    @SerializedName("1")
+    @JsonProperty("1")
     private String p_1;
-    @SerializedName("2")
+    @JsonProperty("2")
     private String p_2;
-    @SerializedName("3")
+    @JsonProperty("3")
     private String p_3;
-    @SerializedName("4")
+    @JsonProperty("4")
     private String p_4;
-    @SerializedName("5")
+    @JsonProperty("5")
     private String p_5;
-    @SerializedName("6")
+    @JsonProperty("6")
     private String p_6;
-    @SerializedName("7")
+    @JsonProperty("7")
     private String p_7;
-    @SerializedName("8")
+    @JsonProperty("8")
     private String p_8;
 }

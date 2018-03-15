@@ -18,7 +18,7 @@ package org.mycontroller.restclient.plivo.model;
 
 import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,9 +34,9 @@ import lombok.ToString;
 public class MessageResponse {
     private String message;
 
-    @SerializedName("message_uuid")
+    @JsonProperty("message_uuid")
     private List<String> messageUuid;
 
-    @SerializedName("api_id")
+    @JsonProperty("api_id")
     private String apiId;
 }

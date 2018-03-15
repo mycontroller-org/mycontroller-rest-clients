@@ -16,7 +16,7 @@
  */
 package org.mycontroller.restclient.plivo.model;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -29,31 +29,31 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Account {
-    @SerializedName("account_type")
+    @JsonProperty("account_type")
     private String accountType;
 
     private String address;
 
-    @SerializedName("api_id")
+    @JsonProperty("api_id")
     private String apiId;
 
-    @SerializedName("auth_id")
+    @JsonProperty("auth_id")
     private String authId;
 
-    @SerializedName("auto_recharge")
+    @JsonProperty("auto_recharge")
     private Boolean autoRecharge;
 
-    @SerializedName("billing_mode")
+    @JsonProperty("billing_mode")
     private String billingMode;
 
-    @SerializedName("cash_credits")
+    @JsonProperty("cash_credits")
     private String cashCredits;
 
     private String city;
 
     private String name;
 
-    @SerializedName("resource_uri")
+    @JsonProperty("resource_uri")
     private String resourceUri;
 
     private String state;

@@ -16,7 +16,7 @@
  */
 package org.mycontroller.restclient.pushbullet.model;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -37,25 +37,25 @@ public class PushResponse {
     private String iden;
     private String modified;
 
-    @SerializedName("receiver_email")
+    @JsonProperty("receiver_email")
     private String receiverEmail;
 
-    @SerializedName("receiver_email_normalized")
+    @JsonProperty("receiver_email_normalized")
     private String receiverEmailNormalized;
 
-    @SerializedName("receiver_iden")
+    @JsonProperty("receiver_iden")
     private String receiverIden;
 
-    @SerializedName("sender_email")
+    @JsonProperty("sender_email")
     private String senderEmail;
 
-    @SerializedName("sender_email_normalized")
+    @JsonProperty("sender_email_normalized")
     private String senderEmailEormalized;
 
-    @SerializedName("sender_iden")
+    @JsonProperty("sender_iden")
     private String senderIden;
 
-    @SerializedName("sender_name")
+    @JsonProperty("sender_name")
     private String senderName;
 
     private String title;

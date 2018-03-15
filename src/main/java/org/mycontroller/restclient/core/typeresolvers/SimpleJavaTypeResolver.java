@@ -45,6 +45,8 @@ public class SimpleJavaTypeResolver {
      * Simple Class with Generic, i.e.: Metric<Double>
      */
     public JavaType get(Class<?> clazz, Class<?> parametrizedClazz) {
-        return objectMapper.getTypeFactory().constructParametricType(clazz, clazz, parametrizedClazz);
+        JavaType parametrizedClazzType = objectMapper.getTypeFactory().constructType(parametrizedClazz);
+
+        return objectMapper.getTypeFactory().constructParametrizedType(clazz, clazz, parametrizedClazzType);
     }
 }

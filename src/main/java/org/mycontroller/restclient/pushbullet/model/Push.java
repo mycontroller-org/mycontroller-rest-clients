@@ -16,7 +16,7 @@
  */
 package org.mycontroller.restclient.pushbullet.model;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Builder;
 import lombok.Data;
@@ -30,15 +30,15 @@ import lombok.ToString;
 @Data
 @ToString
 public class Push {
-    @SerializedName("device_iden")
+    @JsonProperty("device_iden")
     private String deviceIden;
 
     private String email;
 
-    @SerializedName("channel_tag")
+    @JsonProperty("channel_tag")
     private String channelTag;
 
-    @SerializedName("client_iden")
+    @JsonProperty("client_iden")
     private String clientIden;
 
     private String type;

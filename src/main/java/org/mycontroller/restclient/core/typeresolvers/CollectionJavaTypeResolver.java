@@ -49,7 +49,10 @@ public class CollectionJavaTypeResolver {
      */
     public JavaType get(@SuppressWarnings("rawtypes") Class<? extends List> collectionClazz, Class<?> clazz,
             Class<?> parametrizedClazz) {
-        JavaType clazzType = objectMapper.getTypeFactory().constructParametricType(clazz, clazz, parametrizedClazz);
+        JavaType parametrizedClazzType = objectMapper.getTypeFactory().constructType(parametrizedClazz);
+        JavaType clazzType = objectMapper.getTypeFactory().constructParametrizedType(clazz, clazz,
+                parametrizedClazzType);
+
         return objectMapper.getTypeFactory().constructCollectionType(collectionClazz, clazzType);
     }
 

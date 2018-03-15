@@ -53,7 +53,7 @@ public class MapJavaTypeResolver {
     public JavaType get(@SuppressWarnings("rawtypes") Class<? extends Map> mapClazz, Class<?> mapClazzKey,
             Class<?> mapClazzValue, Class<?> mapClazzParametrizedValue) {
         JavaType mapClazzKeyType = objectMapper.getTypeFactory().constructType(mapClazzKey);
-        JavaType parametrizedClazzType = objectMapper.getTypeFactory().constructParametricType(mapClazzValue,
+        JavaType parametrizedClazzType = objectMapper.getTypeFactory().constructParametrizedType(mapClazzValue,
                 mapClazzValue, mapClazzParametrizedValue);
 
         return objectMapper.getTypeFactory().constructMapType(mapClazz, mapClazzKeyType, parametrizedClazzType);

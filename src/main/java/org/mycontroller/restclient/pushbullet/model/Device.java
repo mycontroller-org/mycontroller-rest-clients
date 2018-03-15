@@ -16,7 +16,7 @@
  */
 package org.mycontroller.restclient.pushbullet.model;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -35,24 +35,24 @@ public class Device {
     private String icon;
     private String nickname;
 
-    @SerializedName("generated_nickname")
+    @JsonProperty("generated_nickname")
     private Boolean generatedNickname;
 
     private String manufacturer;
     private String model;
 
-    @SerializedName("app_version")
+    @JsonProperty("app_version")
     private Integer appVersion;
 
     private String fingerprint;
 
-    @SerializedName("key_fingerprint")
+    @JsonProperty("key_fingerprint")
     private String keyFingerprint;
 
-    @SerializedName("push_token")
+    @JsonProperty("push_token")
     private String pushToken;
 
-    @SerializedName("has_sms")
+    @JsonProperty("has_sms")
     private String hasSms;
 
 }
