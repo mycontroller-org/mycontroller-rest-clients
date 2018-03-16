@@ -34,6 +34,8 @@ import javax.net.ssl.SSLSession;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -90,6 +92,7 @@ public class McHttpClient {
     }
 
     private CloseableHttpClient client = null;
+    private RequestConfig customRequestConfig = null;
 
     private ObjectMapper mapper = new ClientObjectMapper();
 
@@ -102,6 +105,9 @@ public class McHttpClient {
     }
 
     public McHttpClient(TRUST_HOST_TYPE trustHostType) {
+        customRequestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.STANDARD)
+                .build();
         if (trustHostType == TRUST_HOST_TYPE.ANY) {
             client = getHttpClientTrustAll();
         } else {
@@ -110,7 +116,9 @@ public class McHttpClient {
     }
 
     protected CloseableHttpClient getHttpClient() {
-        return HttpClientBuilder.create().build();
+        return HttpClients.custom()
+                .setDefaultRequestConfig(customRequestConfig)
+                .build();
     }
 
     //trust any host
@@ -127,11 +135,13 @@ public class McHttpClient {
             });
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build(),
                     new AnyHostnameVerifier());
-            CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
-            return httpclient;
+            return HttpClients.custom()
+                    .setSSLSocketFactory(sslsf)
+                    .setDefaultRequestConfig(customRequestConfig)
+                    .build();
         } catch (Exception ex) {
             _logger.error("Exception, ", ex);
-            return null;
+            throw new RuntimeException("Unable to create trust ANY http client. Error: " + ex.getMessage());
         }
     }
 
