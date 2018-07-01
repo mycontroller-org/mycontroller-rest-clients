@@ -19,9 +19,9 @@ package org.mycontroller.restclient.influxdb;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mycontroller.restclient.core.McHeader;
-import org.mycontroller.restclient.core.McHttpClient;
-import org.mycontroller.restclient.core.McHttpResponse;
+import org.mycontroller.restclient.core.RestHeader;
+import org.mycontroller.restclient.core.RestHttpClient;
+import org.mycontroller.restclient.core.RestHttpResponse;
 import org.mycontroller.restclient.core.TRUST_HOST_TYPE;
 import org.mycontroller.restclient.influxdb.model.Pong;
 import org.mycontroller.restclient.influxdb.model.Query;
@@ -32,14 +32,14 @@ import org.mycontroller.restclient.influxdb.model.QueryResult;
  * @since 2.1.0
  */
 
-public class InfluxDBClient extends McHttpClient {
+public class InfluxDBClient extends RestHttpClient {
 
     private String username;
     private String password;
     private String database;
 
     private String baseUrl;
-    private McHeader header;
+    private RestHeader header;
 
     private StringBuilder dataBuilder = new StringBuilder();
 
@@ -62,7 +62,7 @@ public class InfluxDBClient extends McHttpClient {
     }
 
     private void initClient() {
-        header = McHeader.getDefault();
+        header = RestHeader.getDefault();
         header.addJsonContentType();
         header.addAuthorization(username, password);
     }
@@ -81,7 +81,7 @@ public class InfluxDBClient extends McHttpClient {
     }
 
     public Pong ping() {
-        McHttpResponse response = doGet(baseUrl + "/ping", null);
+        RestHttpResponse response = doGet(baseUrl + "/ping", null);
         if (response.getResponseCode().equals(STATUS_CODE.NO_CONTENT.getCode())) {
             return Pong.builder()
                     .version(getHeader(response, "X-Influxdb-Version"))
@@ -101,13 +101,13 @@ public class InfluxDBClient extends McHttpClient {
         if (query.getEpoch() == null) {
             query.setEpoch("ms");
         }
-        McHttpResponse response = doGet(baseUrl + "/query", query.getQueryMap(), header, STATUS_CODE.OK.getCode());
+        RestHttpResponse response = doGet(baseUrl + "/query", query.getQueryMap(), header, STATUS_CODE.OK.getCode());
         return (QueryResult) readValue(response.getEntity(), simpleResolver().get(QueryResult.class));
     }
 
     public QueryResult queryManagement(Query query) {
         query.setDb(database);
-        McHttpResponse response = doPost(baseUrl + "/query", query.getQueryMap(), header, STATUS_CODE.OK.getCode());
+        RestHttpResponse response = doPost(baseUrl + "/query", query.getQueryMap(), header, STATUS_CODE.OK.getCode());
         return (QueryResult) readValue(response.getEntity(), simpleResolver().get(QueryResult.class));
     }
 

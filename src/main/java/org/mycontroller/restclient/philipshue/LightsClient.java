@@ -20,9 +20,9 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mycontroller.restclient.core.McHeader;
-import org.mycontroller.restclient.core.McHttpClient;
-import org.mycontroller.restclient.core.McHttpResponse;
+import org.mycontroller.restclient.core.RestHeader;
+import org.mycontroller.restclient.core.RestHttpClient;
+import org.mycontroller.restclient.core.RestHttpResponse;
 import org.mycontroller.restclient.core.TRUST_HOST_TYPE;
 import org.mycontroller.restclient.philipshue.model.LightState;
 import org.mycontroller.restclient.philipshue.model.State;
@@ -32,11 +32,11 @@ import org.mycontroller.restclient.philipshue.model.State;
  * @since 2.1.0
  */
 
-public class LightsClient extends McHttpClient {
+public class LightsClient extends RestHttpClient {
     private String username;
 
     private String baseUrl;
-    private McHeader header;
+    private RestHeader header;
 
     public LightsClient(String baseUrl, String username, TRUST_HOST_TYPE trustHostType) {
         super(trustHostType == null ? TRUST_HOST_TYPE.DEFAULT : trustHostType);
@@ -51,7 +51,7 @@ public class LightsClient extends McHttpClient {
 
     private void initClient() {
         baseUrl = MessageFormat.format("{0}/api/{1}", baseUrl, username);
-        header = McHeader.getDefault();
+        header = RestHeader.getDefault();
         header.addJsonContentType();
     }
 
@@ -61,25 +61,25 @@ public class LightsClient extends McHttpClient {
 
     @SuppressWarnings("unchecked")
     public Map<String, LightState> listAll() {
-        McHttpResponse response = doGet(baseUrl + "/lights", header, STATUS_CODE.OK.getCode());
+        RestHttpResponse response = doGet(baseUrl + "/lights", header, STATUS_CODE.OK.getCode());
         return (Map<String, LightState>) readValue(response.getEntity(),
                 mapResolver().get(Map.class, String.class, LightState.class));
     }
 
     @SuppressWarnings("unchecked")
     public Map<String, LightState> listNew() {
-        McHttpResponse response = doGet(baseUrl + "/lights/new", header, STATUS_CODE.OK.getCode());
+        RestHttpResponse response = doGet(baseUrl + "/lights/new", header, STATUS_CODE.OK.getCode());
         return (Map<String, LightState>) readValue(response.getEntity(),
                 mapResolver().get(Map.class, String.class, LightState.class));
     }
 
     public String searchNew() {
-        McHttpResponse response = doPost(baseUrl + "/lights", header, null, STATUS_CODE.OK.getCode());
+        RestHttpResponse response = doPost(baseUrl + "/lights", header, null, STATUS_CODE.OK.getCode());
         return (String) readValue(response.getEntity(), simpleResolver().get(String.class));
     }
 
     public LightState state(String id) {
-        McHttpResponse response = doGet(baseUrl + MessageFormat.format("/lights/{0}", id),
+        RestHttpResponse response = doGet(baseUrl + MessageFormat.format("/lights/{0}", id),
                 header, STATUS_CODE.OK.getCode());
         return (LightState) readValue(response.getEntity(), simpleResolver().get(LightState.class));
     }

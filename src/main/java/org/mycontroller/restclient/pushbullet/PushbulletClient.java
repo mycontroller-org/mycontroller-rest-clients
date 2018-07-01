@@ -19,9 +19,9 @@ package org.mycontroller.restclient.pushbullet;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.mycontroller.restclient.core.McHeader;
-import org.mycontroller.restclient.core.McHttpClient;
-import org.mycontroller.restclient.core.McHttpResponse;
+import org.mycontroller.restclient.core.RestHeader;
+import org.mycontroller.restclient.core.RestHttpClient;
+import org.mycontroller.restclient.core.RestHttpResponse;
 import org.mycontroller.restclient.core.TRUST_HOST_TYPE;
 import org.mycontroller.restclient.pushbullet.model.Device;
 import org.mycontroller.restclient.pushbullet.model.Devices;
@@ -34,14 +34,14 @@ import org.mycontroller.restclient.pushbullet.model.User;
  * @since 2.1.0
  */
 
-public class PushbulletClient extends McHttpClient {
+public class PushbulletClient extends RestHttpClient {
     public static final String URL = "https://api.pushbullet.com";
     public static final String VERSION = "v2";
 
     private String authToken;
 
     private String baseUrl;
-    private McHeader header;
+    private RestHeader header;
 
     public PushbulletClient(String authToken, TRUST_HOST_TYPE trustHostType) {
         super(trustHostType == null ? TRUST_HOST_TYPE.DEFAULT : trustHostType);
@@ -51,23 +51,23 @@ public class PushbulletClient extends McHttpClient {
 
     private void initClient() {
         baseUrl = MessageFormat.format("{0}/{1}", URL, VERSION);
-        header = McHeader.getDefault();
+        header = RestHeader.getDefault();
         header.addJsonContentType();
         header.put("Access-Token", authToken);
     }
 
     public PushResponse createPush(Push push) {
-        McHttpResponse response = doPost(baseUrl + "/pushes", header, toJsonString(push), STATUS_CODE.OK.getCode());
+        RestHttpResponse response = doPost(baseUrl + "/pushes", header, toJsonString(push), STATUS_CODE.OK.getCode());
         return (PushResponse) readValue(response.getEntity(), simpleResolver().get(PushResponse.class));
     }
 
     public User currentUser() {
-        McHttpResponse response = doGet(baseUrl + "/users/me", header, STATUS_CODE.OK.getCode());
+        RestHttpResponse response = doGet(baseUrl + "/users/me", header, STATUS_CODE.OK.getCode());
         return (User) readValue(response.getEntity(), simpleResolver().get(User.class));
     }
 
     public List<Device> devices() {
-        McHttpResponse response = doGet(baseUrl + "/devices", header, STATUS_CODE.OK.getCode());
+        RestHttpResponse response = doGet(baseUrl + "/devices", header, STATUS_CODE.OK.getCode());
         return ((Devices) readValue(response.getEntity(), simpleResolver().get(Devices.class))).getDevices();
     }
 

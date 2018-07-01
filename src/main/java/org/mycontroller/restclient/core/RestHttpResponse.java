@@ -22,7 +22,7 @@ import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.mycontroller.restclient.core.McHttpClient.STATUS_CODE;
+import org.mycontroller.restclient.core.RestHttpClient.STATUS_CODE;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -38,11 +38,11 @@ import lombok.extern.slf4j.Slf4j;
 @ToString
 @Builder
 @Slf4j
-public class McHttpResponse {
-    public static McHttpResponse get(URI uri, HttpResponse response)
+public class RestHttpResponse {
+    public static RestHttpResponse get(URI uri, HttpResponse response)
             throws UnsupportedOperationException, IOException {
         _logger.debug("{}", response);
-        McHttpResponse mcResponse = McHttpResponse.builder()
+        RestHttpResponse mcResponse = RestHttpResponse.builder()
                 .uri(uri)
                 .responseCode(response.getStatusLine().getStatusCode())
                 .headers(response.getAllHeaders())

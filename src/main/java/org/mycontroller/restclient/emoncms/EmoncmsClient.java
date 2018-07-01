@@ -19,9 +19,9 @@ package org.mycontroller.restclient.emoncms;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mycontroller.restclient.core.McHeader;
-import org.mycontroller.restclient.core.McHttpClient;
-import org.mycontroller.restclient.core.McHttpResponse;
+import org.mycontroller.restclient.core.RestHeader;
+import org.mycontroller.restclient.core.RestHttpClient;
+import org.mycontroller.restclient.core.RestHttpResponse;
 import org.mycontroller.restclient.core.TRUST_HOST_TYPE;
 
 /**
@@ -29,13 +29,13 @@ import org.mycontroller.restclient.core.TRUST_HOST_TYPE;
  * @since 2.1.0
  */
 
-public class EmoncmsClient extends McHttpClient {
+public class EmoncmsClient extends RestHttpClient {
     public static final String DEFAULT_URL = "https://emoncms.org";
 
     private String writeApiKey;
 
     private String baseUrl;
-    private McHeader header;
+    private RestHeader header;
 
     public EmoncmsClient(String url, String writeApiKey, TRUST_HOST_TYPE trustHostType) {
         super(trustHostType == null ? TRUST_HOST_TYPE.DEFAULT : trustHostType);
@@ -49,7 +49,7 @@ public class EmoncmsClient extends McHttpClient {
     }
 
     private void initClient() {
-        header = McHeader.getDefault();
+        header = RestHeader.getDefault();
         header.addJsonContentType();
         header.put("Authorization", "Bearer " + writeApiKey);
     }
@@ -69,7 +69,7 @@ public class EmoncmsClient extends McHttpClient {
         if (timestampUnix != null) {
             queryParameters.put("time", timestampUnix);
         }
-        McHttpResponse response = doGet(baseUrl + "/input/post", queryParameters, header, STATUS_CODE.OK.getCode());
+        RestHttpResponse response = doGet(baseUrl + "/input/post", queryParameters, header, STATUS_CODE.OK.getCode());
         return response.getEntity();
     }
 

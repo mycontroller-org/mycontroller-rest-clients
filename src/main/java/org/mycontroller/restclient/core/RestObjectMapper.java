@@ -26,12 +26,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  * @since 2.1.0
  */
 
-public class ClientObjectMapper extends ObjectMapper {
+public class RestObjectMapper extends ObjectMapper {
 
     /**  */
     private static final long serialVersionUID = -1702600618371852994L;
 
-    public ClientObjectMapper() {
+    public RestObjectMapper() {
         config(this);
     }
 

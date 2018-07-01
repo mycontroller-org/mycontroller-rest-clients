@@ -20,9 +20,9 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mycontroller.restclient.core.McHeader;
-import org.mycontroller.restclient.core.McHttpClient;
-import org.mycontroller.restclient.core.McHttpResponse;
+import org.mycontroller.restclient.core.RestHeader;
+import org.mycontroller.restclient.core.RestHttpClient;
+import org.mycontroller.restclient.core.RestHttpResponse;
 import org.mycontroller.restclient.core.TRUST_HOST_TYPE;
 import org.mycontroller.restclient.wunderground.model.Criteria;
 import org.mycontroller.restclient.wunderground.model.WUResponse;
@@ -32,7 +32,7 @@ import org.mycontroller.restclient.wunderground.model.WUResponse;
  * @since 2.1.0
  */
 
-public class WundergroundClient extends McHttpClient {
+public class WundergroundClient extends RestHttpClient {
     public static final String URL = "https://api.wunderground.com";
     public static final String UPLOAD_URL = "https://weatherstation.wunderground.com"
             + "/weatherstation/updateweatherstation.php";
@@ -40,7 +40,7 @@ public class WundergroundClient extends McHttpClient {
     private String apiKey;
 
     private String baseUrl;
-    private McHeader header;
+    private RestHeader header;
 
     public WundergroundClient(String apiKey, TRUST_HOST_TYPE trustHostType) {
         super(trustHostType == null ? TRUST_HOST_TYPE.DEFAULT : trustHostType);
@@ -50,7 +50,7 @@ public class WundergroundClient extends McHttpClient {
 
     private void initClient() {
         baseUrl = URL;
-        header = McHeader.getDefault();
+        header = RestHeader.getDefault();
         header.addJsonContentType();
     }
 
@@ -61,7 +61,7 @@ public class WundergroundClient extends McHttpClient {
             queryParams.put("geo_ip", criteria.getGeoIP());
         }
         // sample url: /api/{key}/{features}/lang:{languageCode}/q/{location}.json
-        McHttpResponse response = doGet(baseUrl +
+        RestHttpResponse response = doGet(baseUrl +
                 MessageFormat.format("/api/{0}/{1}/lang:{2}/q/{3}.json",
                         apiKey, criteria.getFeatures().queryString(),
                         criteria.getLanguageCode(), criteria.getLocation()),
@@ -74,7 +74,7 @@ public class WundergroundClient extends McHttpClient {
     public String send(Map<String, Object> data) {
         updateOnNull(data, "action", "updateraw");
         updateOnNull(data, "dateutc", "now");
-        McHttpResponse response = doGet(UPLOAD_URL, data, header, STATUS_CODE.OK.getCode());
+        RestHttpResponse response = doGet(UPLOAD_URL, data, header, STATUS_CODE.OK.getCode());
         return response.getEntity();
     }
 }

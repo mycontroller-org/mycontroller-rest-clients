@@ -67,7 +67,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-public class McHttpClient {
+public class RestHttpClient {
 
     // https://httpstatuses.com/
     public enum STATUS_CODE {
@@ -94,17 +94,17 @@ public class McHttpClient {
     private CloseableHttpClient client = null;
     private RequestConfig customRequestConfig = null;
 
-    private ObjectMapper mapper = new ClientObjectMapper();
+    private ObjectMapper mapper = new RestObjectMapper();
 
     private SimpleJavaTypeResolver simpleJavaTypeResolver = new SimpleJavaTypeResolver();
     private CollectionJavaTypeResolver collectionJavaTypeResolver = new CollectionJavaTypeResolver();
     private MapJavaTypeResolver mapJavaTypeResolver = new MapJavaTypeResolver();
 
-    public McHttpClient() {
+    public RestHttpClient() {
         client = HttpClientBuilder.create().build();
     }
 
-    public McHttpClient(TRUST_HOST_TYPE trustHostType) {
+    public RestHttpClient(TRUST_HOST_TYPE trustHostType) {
         customRequestConfig = RequestConfig.custom()
                 .setCookieSpec(CookieSpecs.STANDARD)
                 .build();
@@ -154,11 +154,11 @@ public class McHttpClient {
 
     }
 
-    private McHttpResponse execute(HttpUriRequest request) {
+    private RestHttpResponse execute(HttpUriRequest request) {
         CloseableHttpResponse response = null;
         try {
             response = client.execute(request);
-            return McHttpResponse.get(request.getURI(), response);
+            return RestHttpResponse.get(request.getURI(), response);
         } catch (Exception ex) {
             _logger.debug("Exception,", ex);
             throw new RuntimeException(
@@ -189,38 +189,38 @@ public class McHttpClient {
     // GET, POST, PUT, DELETE methods start
 
     // HTTP DELETE request
-    protected McHttpResponse doDelete(String url, Integer expectedResponseCode) {
-        return doDelete(url, McHeader.getDefault(), expectedResponseCode);
+    protected RestHttpResponse doDelete(String url, Integer expectedResponseCode) {
+        return doDelete(url, RestHeader.getDefault(), expectedResponseCode);
     }
 
     // HTTP DELETE request - primary method
-    protected McHttpResponse doDelete(String url, McHeader header, Integer expectedResponseCode) {
+    protected RestHttpResponse doDelete(String url, RestHeader header, Integer expectedResponseCode) {
         HttpDelete delete = new HttpDelete(url);
         header.updateHeaders(delete);
-        McHttpResponse httpResponse = execute(delete);
+        RestHttpResponse httpResponse = execute(delete);
         // validate response
         validateResponse(httpResponse, expectedResponseCode);
         return httpResponse;
     }
 
     // HTTP GET request
-    protected McHttpResponse doGet(String url, Integer expectedResponseCode) {
-        return doGet(url, null, McHeader.getDefault(), expectedResponseCode);
+    protected RestHttpResponse doGet(String url, Integer expectedResponseCode) {
+        return doGet(url, null, RestHeader.getDefault(), expectedResponseCode);
     }
 
     // HTTP GET request
-    protected McHttpResponse doGet(String url, Map<String, Object> queryParameters, Integer expectedResponseCode) {
-        return doGet(url, queryParameters, McHeader.getDefault(), expectedResponseCode);
+    protected RestHttpResponse doGet(String url, Map<String, Object> queryParameters, Integer expectedResponseCode) {
+        return doGet(url, queryParameters, RestHeader.getDefault(), expectedResponseCode);
     }
 
     // HTTP GET request - primary method
-    protected McHttpResponse doGet(String url, Map<String, Object> queryParameters,
-            McHeader header, Integer expectedResponseCode) {
+    protected RestHttpResponse doGet(String url, Map<String, Object> queryParameters,
+            RestHeader header, Integer expectedResponseCode) {
         try {
             HttpGet get = new HttpGet(getURI(url, queryParameters));
             header.updateHeaders(get);
             // execute
-            McHttpResponse httpResponse = execute(get);
+            RestHttpResponse httpResponse = execute(get);
             // validate response
             validateResponse(httpResponse, expectedResponseCode);
             return httpResponse;
@@ -232,19 +232,19 @@ public class McHttpClient {
     }
 
     // HTTP GET request
-    protected McHttpResponse doGet(String url, McHeader header, Integer expectedResponseCode) {
+    protected RestHttpResponse doGet(String url, RestHeader header, Integer expectedResponseCode) {
         return doGet(url, null, header, expectedResponseCode);
     }
 
     // HTTP POST request - primary method
-    protected McHttpResponse doPost(String url, Map<String, Object> queryParameters,
-            McHeader header, HttpEntity entity, Integer expectedResponseCode) {
+    protected RestHttpResponse doPost(String url, Map<String, Object> queryParameters,
+            RestHeader header, HttpEntity entity, Integer expectedResponseCode) {
         try {
             HttpPost post = new HttpPost(getURI(url, queryParameters));
             header.updateHeaders(post);
             post.setEntity(entity);
             // execute
-            McHttpResponse httpResponse = execute(post);
+            RestHttpResponse httpResponse = execute(post);
             // validate response
             validateResponse(httpResponse, expectedResponseCode);
             return httpResponse;
@@ -257,15 +257,15 @@ public class McHttpClient {
     }
 
     // HTTP POST request
-    protected McHttpResponse doPost(String url, Map<String, Object> queryParameters,
-            McHeader header, Integer expectedResponseCode) {
+    protected RestHttpResponse doPost(String url, Map<String, Object> queryParameters,
+            RestHeader header, Integer expectedResponseCode) {
         StringEntity stringEntity = null;
         return doPost(url, queryParameters, header, stringEntity, expectedResponseCode);
     }
 
     // HTTP POST request
-    protected McHttpResponse doPost(String url, Map<String, Object> queryParameters,
-            McHeader header, String entity, Integer expectedResponseCode) {
+    protected RestHttpResponse doPost(String url, Map<String, Object> queryParameters,
+            RestHeader header, String entity, Integer expectedResponseCode) {
         _logger.debug("Entity: {}", entity);
         try {
             return doPost(url, queryParameters, header, new StringEntity(entity), expectedResponseCode);
@@ -278,31 +278,31 @@ public class McHttpClient {
     }
 
     // HTTP POST request
-    protected McHttpResponse doPost(String url, McHeader header, String entity,
+    protected RestHttpResponse doPost(String url, RestHeader header, String entity,
             Integer expectedResponseCode) {
         return doPost(url, null, header, entity, expectedResponseCode);
     }
 
     // HTTP PUT request
-    protected McHttpResponse doPut(String url, McHeader header, HttpEntity entity, Integer expectedResponseCode) {
+    protected RestHttpResponse doPut(String url, RestHeader header, HttpEntity entity, Integer expectedResponseCode) {
         HttpPut put = new HttpPut(url);
         header.updateHeaders(put);
         put.setEntity(entity);
         // execute
-        McHttpResponse httpResponse = execute(put);
+        RestHttpResponse httpResponse = execute(put);
         // validate response
         validateResponse(httpResponse, expectedResponseCode);
         return httpResponse;
     }
 
     // HTTP PUT request
-    protected McHttpResponse doPut(String url, McHeader header, Integer expectedResponseCode) {
+    protected RestHttpResponse doPut(String url, RestHeader header, Integer expectedResponseCode) {
         StringEntity stringEntity = null;
         return doPut(url, header, stringEntity, expectedResponseCode);
     }
 
     // HTTP PUT request
-    protected McHttpResponse doPut(String url, McHeader header, String entity, Integer expectedResponseCode) {
+    protected RestHttpResponse doPut(String url, RestHeader header, String entity, Integer expectedResponseCode) {
         _logger.debug("Entity: {}", entity);
         try {
             return doPut(url, header, new StringEntity(entity), expectedResponseCode);
@@ -313,7 +313,7 @@ public class McHttpClient {
         }
     }
 
-    public String getHeader(McHttpResponse response, String name) {
+    public String getHeader(RestHttpResponse response, String name) {
         Header[] headers = response.getHeaders();
         for (int index = 0; index < headers.length; index++) {
             Header header = headers[index];
@@ -331,7 +331,7 @@ public class McHttpClient {
     }
 
     // validate response
-    public void validateResponse(McHttpResponse response, Integer expectedResponseCode) {
+    public void validateResponse(RestHttpResponse response, Integer expectedResponseCode) {
         _logger.debug("{}", response);
         if (expectedResponseCode != null) {
             if (!response.getResponseCode().equals(expectedResponseCode)) {

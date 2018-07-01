@@ -18,9 +18,9 @@ package org.mycontroller.restclient.twilio;
 
 import java.text.MessageFormat;
 
-import org.mycontroller.restclient.core.McHeader;
-import org.mycontroller.restclient.core.McHttpClient;
-import org.mycontroller.restclient.core.McHttpResponse;
+import org.mycontroller.restclient.core.RestHeader;
+import org.mycontroller.restclient.core.RestHttpClient;
+import org.mycontroller.restclient.core.RestHttpResponse;
 import org.mycontroller.restclient.core.TRUST_HOST_TYPE;
 import org.mycontroller.restclient.twilio.model.Message;
 import org.mycontroller.restclient.twilio.model.MessageResponse;
@@ -30,7 +30,7 @@ import org.mycontroller.restclient.twilio.model.MessageResponse;
  * @since 2.1.0
  */
 
-public class TwilioClient extends McHttpClient {
+public class TwilioClient extends RestHttpClient {
     public static final String URL = "https://api.twilio.com";
     public static final String VERSION = "2010-04-01";
 
@@ -38,7 +38,7 @@ public class TwilioClient extends McHttpClient {
     private String authToken;
 
     private String baseUrl;
-    private McHeader header;
+    private RestHeader header;
 
     public TwilioClient(String accountSid, String authToken, TRUST_HOST_TYPE trustHostType) {
         super(trustHostType == null ? TRUST_HOST_TYPE.DEFAULT : trustHostType);
@@ -49,13 +49,13 @@ public class TwilioClient extends McHttpClient {
 
     private void initClient() {
         baseUrl = MessageFormat.format("{0}/{1}/{2}", URL, VERSION, accountSid);
-        header = McHeader.getDefault();
+        header = RestHeader.getDefault();
         header.addJsonContentType();
         header.addAuthorization(accountSid, authToken);
     }
 
     public MessageResponse sendMessage(Message message) {
-        McHttpResponse response = doPost(baseUrl + "/Messages", header, toJsonString(message),
+        RestHttpResponse response = doPost(baseUrl + "/Messages", header, toJsonString(message),
                 STATUS_CODE.CREATED.getCode());
         return (MessageResponse) readValue(response.getEntity(), simpleResolver().get(MessageResponse.class));
     }

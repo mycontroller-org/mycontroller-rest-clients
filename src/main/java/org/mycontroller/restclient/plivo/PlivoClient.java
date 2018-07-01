@@ -19,9 +19,9 @@ package org.mycontroller.restclient.plivo;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.mycontroller.restclient.core.McHeader;
-import org.mycontroller.restclient.core.McHttpClient;
-import org.mycontroller.restclient.core.McHttpResponse;
+import org.mycontroller.restclient.core.RestHeader;
+import org.mycontroller.restclient.core.RestHttpClient;
+import org.mycontroller.restclient.core.RestHttpResponse;
 import org.mycontroller.restclient.core.TRUST_HOST_TYPE;
 import org.mycontroller.restclient.plivo.model.Account;
 import org.mycontroller.restclient.plivo.model.Message;
@@ -32,7 +32,7 @@ import org.mycontroller.restclient.plivo.model.MessageResponse;
  * @since 2.1.0
  */
 
-public class PlivoClient extends McHttpClient {
+public class PlivoClient extends RestHttpClient {
     public static final String URL = "https://api.plivo.com";
     public static final String VERSION = "v1";
 
@@ -40,7 +40,7 @@ public class PlivoClient extends McHttpClient {
     private String authToken;
 
     private String baseUrl;
-    private McHeader header;
+    private RestHeader header;
 
     public PlivoClient(String authId, String authToken, TRUST_HOST_TYPE trustHostType) {
         super(trustHostType == null ? TRUST_HOST_TYPE.DEFAULT : trustHostType);
@@ -51,26 +51,26 @@ public class PlivoClient extends McHttpClient {
 
     private void initClient() {
         baseUrl = String.format("%s/%s/Account/%s", URL, VERSION, authId);
-        header = McHeader.getDefault();
+        header = RestHeader.getDefault();
         header.addJsonContentType();
         header.addAuthorization(authId, authToken);
     }
 
     public Account accountDetails() {
-        McHttpResponse response = doGet(baseUrl + "/", header, STATUS_CODE.OK.getCode());
+        RestHttpResponse response = doGet(baseUrl + "/", header, STATUS_CODE.OK.getCode());
         return (Account) readValue(response.getEntity(), simpleResolver().get(Account.class));
     }
 
     @SuppressWarnings("unchecked")
     public Map<String, Object> messageStatus(String messageUuid) {
-        McHttpResponse response = doGet(baseUrl + MessageFormat.format("/Message/{0}/", messageUuid), header,
+        RestHttpResponse response = doGet(baseUrl + MessageFormat.format("/Message/{0}/", messageUuid), header,
                 STATUS_CODE.OK.getCode());
         return (Map<String, Object>) readValue(response.getEntity(),
                 mapResolver().get(Map.class, String.class, Object.class));
     }
 
     public MessageResponse sendMessage(Message message) {
-        McHttpResponse response = doPost(baseUrl + "/Message/", header, toJsonString(message),
+        RestHttpResponse response = doPost(baseUrl + "/Message/", header, toJsonString(message),
                 STATUS_CODE.ACCEPTED.getCode());
         return (MessageResponse) readValue(response.getEntity(), simpleResolver().get(MessageResponse.class));
     }

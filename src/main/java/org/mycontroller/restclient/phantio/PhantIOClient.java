@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.mycontroller.restclient.core.McHeader;
-import org.mycontroller.restclient.core.McHttpClient;
-import org.mycontroller.restclient.core.McHttpResponse;
+import org.mycontroller.restclient.core.RestHeader;
+import org.mycontroller.restclient.core.RestHttpClient;
+import org.mycontroller.restclient.core.RestHttpResponse;
 import org.mycontroller.restclient.core.TRUST_HOST_TYPE;
 import org.mycontroller.restclient.phantio.model.PostResponse;
 import org.mycontroller.restclient.phantio.model.Stats;
@@ -34,14 +34,14 @@ import org.mycontroller.restclient.phantio.model.Stats;
  * @since 2.1.0
  */
 
-public class PhantIOClient extends McHttpClient {
+public class PhantIOClient extends RestHttpClient {
     public static final String DEFAULT_URL = "https://data.sparkfun.com";
 
     private String publicKey;
     private String privateKey;
 
     private String baseUrl;
-    private McHeader header;
+    private RestHeader header;
 
     public PhantIOClient(String publicKey, String privateKey, TRUST_HOST_TYPE trustHostType) {
         this(DEFAULT_URL, publicKey, privateKey, trustHostType);
@@ -60,13 +60,13 @@ public class PhantIOClient extends McHttpClient {
     }
 
     private void initClient() {
-        header = McHeader.getDefault();
+        header = RestHeader.getDefault();
         header.addJsonContentType();
         header.put("Phant-Private-Key", privateKey);
     }
 
     public String clear() {
-        McHttpResponse response = doDelete(baseUrl + MessageFormat.format("/input/{0}", publicKey),
+        RestHttpResponse response = doDelete(baseUrl + MessageFormat.format("/input/{0}", publicKey),
                 header, STATUS_CODE.ACCEPTED.getCode());
         return response.getEntity();
     }
@@ -80,20 +80,20 @@ public class PhantIOClient extends McHttpClient {
         HashMap<String, Object> queryParms = new HashMap<String, Object>();
         queryParms.put("timezone", timezone);
         queryParms.put("limit", limit);
-        McHttpResponse response = doGet(baseUrl + MessageFormat.format("output/{0}.json", publicKey),
+        RestHttpResponse response = doGet(baseUrl + MessageFormat.format("output/{0}.json", publicKey),
                 queryParms, header, STATUS_CODE.OK.getCode());
         return (List<Map<String, Object>>) readValue(response.getEntity(),
                 collectionResolver().get(List.class, Map.class, String.class, Object.class));
     }
 
     public PostResponse post(Map<String, Object> data) {
-        McHttpResponse response = doPost(baseUrl + MessageFormat.format("/input/{0}", publicKey),
+        RestHttpResponse response = doPost(baseUrl + MessageFormat.format("/input/{0}", publicKey),
                 header, toJsonString(data), STATUS_CODE.OK.getCode());
         return (PostResponse) readValue(response.getEntity(), simpleResolver().get(PostResponse.class));
     }
 
     public Stats stats() {
-        McHttpResponse response = doGet(baseUrl + MessageFormat.format("/output/{0}/stats.json", publicKey),
+        RestHttpResponse response = doGet(baseUrl + MessageFormat.format("/output/{0}/stats.json", publicKey),
                 header, STATUS_CODE.OK.getCode());
         return (Stats) readValue(response.getEntity(), simpleResolver().get(Stats.class));
     }

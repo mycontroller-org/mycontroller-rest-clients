@@ -18,7 +18,7 @@ package org.mycontroller.restclient.core.typeresolvers;
 
 import java.util.List;
 
-import org.mycontroller.restclient.core.ClientObjectMapper;
+import org.mycontroller.restclient.core.RestObjectMapper;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +33,7 @@ public class CollectionJavaTypeResolver {
     private final ObjectMapper objectMapper;
 
     public CollectionJavaTypeResolver() {
-        this.objectMapper = new ClientObjectMapper();
+        this.objectMapper = new RestObjectMapper();
     }
 
     /**

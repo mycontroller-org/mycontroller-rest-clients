@@ -28,9 +28,9 @@ import org.apache.http.HttpMessage;
  * @since 2.1.0
  */
 
-public class McHeader {
-    public static McHeader getDefault() {
-        McHeader header = new McHeader();
+public class RestHeader {
+    public static RestHeader getDefault() {
+        RestHeader header = new RestHeader();
         header.put("User-Agent", "Mozilla/5.0");
         return header;
     }
