@@ -63,14 +63,14 @@ public class TelegramBotClient extends RestHttpClient {
     }
 
     public User getMe() {
-        RestHttpResponse response = doGet(baseUrl + "/getMe", header, STATUS_CODE.OK.getCode());
+        RestHttpResponse response = doGet(baseUrl + "/getMe", header, null);
         return (User) readResponse(response.getEntity(), simpleResolver().get(User.class));
     }
 
     @SuppressWarnings("unchecked")
     public Map<String, Object> sendMessage(Message message) {
         RestHttpResponse response = doPost(
-                baseUrl + "/sendMessage", header, toJsonString(message), STATUS_CODE.OK.getCode());
+                baseUrl + "/sendMessage", header, toJsonString(message), null);
         return (Map<String, Object>) readResponse(
                 response.getEntity(),
                 mapResolver().get(Map.class, String.class, Object.class));
