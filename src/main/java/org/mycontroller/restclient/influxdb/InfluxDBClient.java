@@ -67,7 +67,8 @@ public class InfluxDBClient extends RestHttpClient {
         header.addAuthorization(username, password);
     }
 
-    public String getData(String measurement, String tags, String fieldName, String value, Long timestamp) {
+    public synchronized String getData(
+            String measurement, String tags, String fieldName, String value, Long timestamp) {
         //timestamp format: 1434067467000000000
         dataBuilder.setLength(0);
         dataBuilder.append(measurement);
