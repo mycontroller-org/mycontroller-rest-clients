@@ -41,9 +41,6 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: check license
-        run: mvn --batch-mode clean package -Dmaven.test.skip=true
-
       - name: Publish package
         run: mvn --batch-mode clean deploy -P release
         env:
