@@ -35,7 +35,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class User {
-    private Integer id;
+    private Long id;
 
     @JsonProperty("is_bot")
     private boolean bot;
